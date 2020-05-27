@@ -17,5 +17,13 @@
             "email": "ludovic.chombeau@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^7.0"
+    },
+    "homepage": "https://github.com/iamludal/PHP-QueryBuilder",
+    "keywords": [
+        "sql",
+        "querybuilder",
+        "query builder"
+    ]
 }
