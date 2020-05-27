@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Ludal;
 
 use Exception;
 use PDO;

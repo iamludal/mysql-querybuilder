@@ -1,8 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Core\QueryBuilder;
-use phpDocumentor\Reflection\Types\Object_;
+use Ludal\QueryBuilder;
 
 final class QueryBuilderTest extends TestCase
 {
