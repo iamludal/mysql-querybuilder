@@ -1,16 +1,29 @@
 # PHP QueryBuilder 🔧
 
-# Presentation ℹ️
+# Table of contents
+
+- [1. Presentation ℹ️](#1-presentation---)
+- [2. TODO (not yet implemented) 📝](#2-todo--not-yet-implemented----)
+- [3. Usage 📝](#3-usage---)
+  * [3.1. `SELECT` query](#31--select--query)
+  * [3.2. `INSERT` query](#32--insert--query)
+  * [3.3. `UPDATE` query](#33--update--query)
+  * [3.4. `DELETE` query](#34--delete--query)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
+# 1. Presentation ℹ️
 
 This is a PHP query builder for SQL queries.
 
-# TODO (not yet implemented) 📝
+# 2. TODO (not yet implemented) 📝
 
 - `SELECT DISTINCT`
 - `JOIN`
 - `RETURNING`
 
-# Usage 📝
+# 3. Usage 📝
 
 First, initialize a new instance of the QueryBuilder class.
 
@@ -48,7 +61,7 @@ $results = $builder
 >   ->fetchAll(PDO::FETCH_CLASS, 'ClassName')
 > ```
 
-## 1. `SELECT` query
+## 3.1. `SELECT` query
 
 Simple queries
 ```php
@@ -80,11 +93,11 @@ $builder
  ->fetchAll(PDO::FETCH_ASSOC);
 ```
 
-## 2. `INSERT` query
+## 3.2. `INSERT` query
 
-## 3. `UPDATE` query
+## 3.3. `UPDATE` query
 
-## 4. `DELETE` query
+## 3.4. `DELETE` query
 
 
 
