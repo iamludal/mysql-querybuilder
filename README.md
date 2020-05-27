@@ -68,6 +68,7 @@ $builder
  ->where('id < :id', 'age > 18') // where conditions are joined with 'AND'
  ->orWhere('name = "George"')
  ->orderBy('age', 'asc') // 'asc' or 'desc', default: 'asc'
+ ->orderBy('name', 'desc') // order by age asc, and for same age, order by name desc
  ->limit(5)
  ->offset(2)
  ->setParam(':id', 5, PDO::PARAM_INT) // or let the class guess the corresponding PDO type by omitting the last parameter
