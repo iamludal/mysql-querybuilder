@@ -1,27 +1,19 @@
-# PHP QueryBuilder 🔧
+# 🔧 PHP QueryBuilder
 
-# Table of contents
+# 📚 Table of contents
 
-- [1. Presentation ℹ️](#1-presentation-ℹ️)
-- [2. TODO (not yet implemented) 📝](#2-todo-not-yet-implemented-📝)
-- [3. Usage 📝](#3-usage-📝)
-  * [3.1. `SELECT` query](#31-select-query)
-  * [3.2. `INSERT` query](#32-insert-query)
-  * [3.3. `UPDATE` query](#33-update-query)
-  * [3.4. `DELETE` query](#34-delete-query)
-
-
-# 1. Presentation ℹ️
+{:#presentation}
+# ℹ️ Presentation
 
 This is a PHP query builder for SQL queries.
 
-# 2. TODO (not yet implemented) 📝
+# 📝 TODO (not yet implemented)
 
 - `SELECT DISTINCT`
 - `JOIN`
 - `RETURNING`
 
-# 3. Usage 📝
+# 📘 Usage
 
 First, initialize a new instance of the QueryBuilder class.
 
