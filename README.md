@@ -1,19 +1,16 @@
 # 🔧 PHP QueryBuilder
 
-# 📚 Table of contents
-
-{:#presentation}
-# ℹ️ Presentation
+## ℹ️ Presentation
 
 This is a PHP query builder for SQL queries.
 
-# 📝 TODO (not yet implemented)
+## 📝 TODO (not yet implemented)
 
 - `SELECT DISTINCT`
 - `JOIN`
 - `RETURNING`
 
-# 📘 Usage
+## 📘 Usage
 
 First, initialize a new instance of the QueryBuilder class.
 
@@ -51,7 +48,7 @@ $results = $builder
 >   ->fetchAll(PDO::FETCH_CLASS, 'ClassName')
 > ```
 
-## 3.1. `SELECT` query
+### 3.1. `SELECT` query
 
 Simple queries
 ```php
@@ -83,11 +80,11 @@ $builder
  ->fetchAll(PDO::FETCH_ASSOC);
 ```
 
-## 3.2. `INSERT` query
+### 3.2. `INSERT` query
 
-## 3.3. `UPDATE` query
+### 3.3. `UPDATE` query
 
-## 3.4. `DELETE` query
+### 3.4. `DELETE` query
 
 
 
