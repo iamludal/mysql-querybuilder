@@ -2,7 +2,6 @@
     "name": "ludal/sql-querybuilder",
     "description": "A simple PHP query builder for SQL queries",
     "type": "library",
-    "version": "1.0",
     "require-dev": {
         "phpunit/phpunit": "^9"
     },
@@ -19,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^7.0"
+        "php": ">=7.0"
     },
     "homepage": "https://github.com/iamludal/PHP-QueryBuilder",
     "keywords": [
