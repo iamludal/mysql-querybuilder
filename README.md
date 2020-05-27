@@ -4,6 +4,10 @@
 
 This is a PHP query builder for SQL queries.
 
+# TODO (not yet implemented) 📝
+
+- `JOIN` clause
+- `RETURNING` clause
 
 # Usage 📝
 
