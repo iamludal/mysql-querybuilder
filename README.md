@@ -48,7 +48,7 @@ $results = $builder
 Simple queries
 ```php
 $builder
-  ->select() // default -> '*'
+  ->select() // default : *
   ->from('users')
 
 $builder
