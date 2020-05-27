@@ -1,12 +1,10 @@
 <?php
 
-namespace Ludal;
+namespace Ludal\QueryBuilder;
 
 use Exception;
 use PDO;
 use PDOStatement;
-
-// require('../vendor/autoload.php');
 
 class QueryBuilder
 {

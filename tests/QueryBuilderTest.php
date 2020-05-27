@@ -1,7 +1,12 @@
 <?php
 
+namespace Ludal\QueryBuilder\Tests;
+
+use Ludal\QueryBuilder\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Ludal\QueryBuilder;
+use Exception;
+use stdClass;
+use PDO;
 
 final class QueryBuilderTest extends TestCase
 {

@@ -48,6 +48,8 @@ $results = $builder
 >   ->fetchAll(PDO::FETCH_CLASS, 'ClassName')
 > ```
 
+> By default: `PDO::FETCH_OBJ`
+
 ### 3.1. `SELECT` query
 
 Simple queries
