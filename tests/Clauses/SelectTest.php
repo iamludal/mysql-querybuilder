@@ -144,7 +144,7 @@ final class SelectTest extends TestCase
         $this->assertEquals('SELECT name, city AS c FROM users', $sql);
     }
 
-    public function testSimpleQueryWithWhereClause()
+    public function testQueryWithWhereClause()
     {
         $sql = $this->getBuilder()
             ->select()
@@ -152,6 +152,45 @@ final class SelectTest extends TestCase
             ->where('id = 5')
             ->toSQL();
 
-        $this->assertEquals('SELECT * FROM users WHERE id = 5', $sql);
+        $this->assertEquals('SELECT * FROM users WHERE (id = 5)', $sql);
+    }
+
+    public function testQueryWithMultipleWhereClauses()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('users')
+            ->where('id = 5', 'age < 18')
+            ->toSQL();
+
+        $expected = 'SELECT * FROM users WHERE (id = 5 AND age < 18)';
+
+        $this->assertEquals($expected, $sql);
+    }
+
+    public function testEmptyWhereIsLikeNotHavingIt()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('users')
+            ->where()
+            ->toSQL();
+
+        $this->assertEquals('SELECT * FROM users', $sql);
+    }
+
+    public function testWhereOrWhere()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->where('doors = 5', 'year < 2000')
+            ->orWhere('km < 1000')
+            ->orWhere('seats = 2', 'wheels = 2')
+            ->toSQL();
+
+        $expected = 'SELECT * FROM cars WHERE (doors = 5 AND year < 2000) OR (km < 1000) OR (seats = 2 AND wheels = 2)';
+
+        $this->assertEquals($expected, $sql);
     }
 }

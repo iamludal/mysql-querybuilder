@@ -11,7 +11,7 @@ class Select extends Clause implements ClauseMethods
 {
     private $table; // the table from which to select
     private $columns = []; // columns to select
-    private $condition; // WHERE condition
+    private $conditions = []; // WHERE conditions
 
     /**
      * Specify the columns to select.
@@ -62,15 +62,31 @@ class Select extends Clause implements ClauseMethods
      * 
      * @param string $condition the condition
      * @return $this
-     * @throws InvalidArgumentException if the condition is not a string
+     * @throws InvalidArgumentException if any condition is not a string
      */
-    public function where($condition)
+    public function where(...$conditions)
     {
-        if (!is_string($condition))
-            throw new InvalidArgumentException("Condition should be a string");
+        foreach ($conditions as $condition) {
+            if (!is_string($condition))
+                throw new InvalidArgumentException('Conditions must be strings');
+        }
 
-        $this->condition = $condition;
+        if ($conditions)
+            $this->conditions[] = implode(' AND ', $conditions);
 
+        return $this;
+    }
+
+    /**
+     * Add OR operator for WHERE clause.
+     * 
+     * @param array|string ...$conditions the conditions
+     * @return $this
+     * @throws InvalidArgumentException if any condition is not a string
+     */
+    public function orWhere(...$conditions)
+    {
+        $this->where(...$conditions);
         return $this;
     }
 
@@ -106,8 +122,10 @@ class Select extends Clause implements ClauseMethods
         $columns = implode(', ', $this->columns) ?: '*';
         $sql = "SELECT $columns FROM {$this->table}";
 
-        if ($this->condition)
-            $sql .= " WHERE {$this->condition}";
+        if ($this->conditions) {
+            $conditions = implode(') OR (', $this->conditions);
+            $sql .= " WHERE ($conditions)";
+        }
 
         return $sql;
 
