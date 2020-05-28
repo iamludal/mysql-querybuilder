@@ -1,5 +1,7 @@
 # 🔧 PHP QueryBuilder
 
+![Build Status](https://travis-ci.org/iamludal/PHP-QueryBuilder.svg?branch=master)
+
 ## ℹ️ Presentation
 
 This is a PHP query builder for SQL queries.
