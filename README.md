@@ -8,15 +8,6 @@
 This is a PHP query builder for SQL queries.
 
 
-## 📝 TODO (not yet implemented)
-
-- `SELECT DISTINCT`
-- `JOIN`
-- `RETURNING`
-- Handle Invalid Queries
-  * E.g. `$builder->from('users')->toSQL();`
-
-
 ## 😃 Emojis legend
 
 Here is the legend for the commit messages emojis: https://gitmoji.carloscuesta.me/
