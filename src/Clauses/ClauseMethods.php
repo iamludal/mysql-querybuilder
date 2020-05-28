@@ -1,6 +1,6 @@
 <?php
 
-namespace Ludal\QueryBuilder;
+namespace Ludal\QueryBuilder\Clauses;
 
 interface ClauseMethods
 {

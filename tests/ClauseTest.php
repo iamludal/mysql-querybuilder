@@ -3,7 +3,7 @@
 namespace Ludal\QueryBuilder\Tests;
 
 use Error;
-use Ludal\QueryBuilder\Clause;
+use Ludal\QueryBuilder\Clauses\Clause;
 use PHPUnit\Framework\TestCase;
 
 final class ClauseTest extends TestCase
