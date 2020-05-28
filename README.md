@@ -11,6 +11,8 @@ This is a PHP query builder for SQL queries.
 - `SELECT DISTINCT`
 - `JOIN`
 - `RETURNING`
+- Handle Invalid Queries
+  * E.g. `$builder->from('users')->toSQL();`
 
 ## 📘 Usage
 
