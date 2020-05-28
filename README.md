@@ -2,9 +2,11 @@
 
 ![Build Status](https://travis-ci.org/iamludal/PHP-QueryBuilder.svg?branch=master)
 
+
 ## ℹ️ Presentation
 
 This is a PHP query builder for SQL queries.
+
 
 ## 📝 TODO (not yet implemented)
 
@@ -13,6 +15,12 @@ This is a PHP query builder for SQL queries.
 - `RETURNING`
 - Handle Invalid Queries
   * E.g. `$builder->from('users')->toSQL();`
+
+
+## 😃 Emojis legend
+
+Here is the legend for the commit messages emojis: https://gitmoji.carloscuesta.me/
+
 
 ## 📘 Usage
 
@@ -44,17 +52,18 @@ $results = $builder
 // Return the rows fetched from the db
 ```
 
-> You can specify the fetch type as you would specify it to `PDO`
+> You can specify the fetch mode as you would do it with `PDO`
 > ```php
 > $builder
 >   ->select()
 >   ->from('users')
->   ->fetchAll(PDO::FETCH_CLASS, 'ClassName')
+>   ->fetchAll(PDO::FETCH_CLASS, SomeClass::class)
 > ```
+>
+> By default : `PDO::FETCH_OBJ`
 
-> By default: `PDO::FETCH_OBJ`
 
-### 3.1. `SELECT` query
+### 1. `SELECT` query
 
 Simple queries
 ```php
@@ -86,11 +95,11 @@ $builder
  ->fetchAll(PDO::FETCH_ASSOC);
 ```
 
-### 3.2. `INSERT` query
+### 2. `INSERT` query
 
-### 3.3. `UPDATE` query
+### 3. `UPDATE` query
 
-### 3.4. `DELETE` query
+### 4. `DELETE` query
 
 
 
