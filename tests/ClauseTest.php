@@ -6,6 +6,7 @@ use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use PHPUnit\Framework\TestCase;
 use Error;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PDO;
 use stdClass;
 
@@ -73,5 +74,25 @@ final class ClauseTest extends TestCase
             $this->assertEquals("User $i", $element->name);
             $i++;
         }
+    }
+
+    public function testInvalidQueryDoesntFetch()
+    {
+        $this->expectException(InvalidQueryException::class);
+
+        $select = new Select(self::$pdo);
+        $select
+            ->from('')
+            ->fetch();
+    }
+
+    public function testInvalidQueryDoesntExecute()
+    {
+        $this->expectException(InvalidQueryException::class);
+
+        $select = new Select(self::$pdo);
+        $select
+            ->from('')
+            ->execute();
     }
 }
