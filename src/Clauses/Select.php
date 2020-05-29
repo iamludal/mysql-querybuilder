@@ -12,6 +12,7 @@ class Select extends Clause implements ClauseMethods
     private $table; // the table from which to select
     private $columns = []; // columns to select
     private $conditions = []; // WHERE conditions
+    private $order = []; // ORDER BY columns
 
     /**
      * Specify the columns to select.
@@ -25,6 +26,8 @@ class Select extends Clause implements ClauseMethods
      */
     public function select(...$columns)
     {
+        $this->columns = [];
+
         foreach ($columns as $column) {
             if (is_string($column))
                 $this->addColumn($column);
@@ -33,6 +36,9 @@ class Select extends Clause implements ClauseMethods
             else
                 throw new InvalidArgumentException("Argument should be a string or array of length 2");
         }
+
+        if (!$columns)
+            $this->addColumn('*');
 
         return $this;
     }
@@ -43,7 +49,7 @@ class Select extends Clause implements ClauseMethods
      * @param string $table the table name
      * @param string $alias (optional) the alias to give to the table
      * @return $this
-     * @throws InvalidArgumentException if the table name is invalid
+     * @throws InvalidArgumentException if the table name is not a
      */
     public function from($table, $alias = null)
     {
@@ -91,6 +97,30 @@ class Select extends Clause implements ClauseMethods
     }
 
     /**
+     * Add ORDER clause to the query
+     * 
+     * @param string $column the column to select
+     * @param string $direction (optional) the direction (ASC or DESC)
+     * @return $this
+     * @throws InvalidArgumentException if the direction is invalid
+     */
+    public function orderBy($column, $direction = 'asc')
+    {
+        $direction = mb_strtoupper($direction);
+
+        if (!in_array($direction, ['ASC', 'DESC']))
+            throw new InvalidArgumentException('Direction should be either ASC or DESC');
+
+        $this->order[] = "$column $direction";
+
+        return $this;
+    }
+
+    public function limit()
+    {
+    }
+
+    /**
      * Add a column to the SELECT clause
      * 
      * @param string $columnName the name of the column to add
@@ -108,7 +138,8 @@ class Select extends Clause implements ClauseMethods
     protected function validate()
     {
         $conditions = [
-            $this->table != null
+            $this->table != null,
+            count($this->columns) > 0
         ];
 
         if (in_array(false, $conditions))
@@ -119,7 +150,7 @@ class Select extends Clause implements ClauseMethods
     {
         $this->validate();
 
-        $columns = implode(', ', $this->columns) ?: '*';
+        $columns = implode(', ', $this->columns);
         $sql = "SELECT $columns FROM {$this->table}";
 
         if ($this->conditions) {
@@ -127,32 +158,16 @@ class Select extends Clause implements ClauseMethods
             $sql .= " WHERE ($conditions)";
         }
 
+        if ($this->order)
+            $sql .= " ORDER BY " . implode(', ', $this->order);
+
         return $sql;
-
-        // if ($this->where)
-        //     $sql .= " {$this->whereToSQL()}";
-
-        // if ($this->order)
-        //     $sql .= " ORDER BY " . implode(", ", $this->order);
 
         // if ($this->limit)
         //     $sql .= " LIMIT {$this->limit}";
 
         // if ($this->offset)
         //     $sql .= " OFFSET {$this->offset}";
-
-        // return $sql;
-        // $sql = "WHERE (" . implode(" AND ", $this->where) . ")";
-
-        // if ($this->orWhere) {
-        //     // [["id = 5", "name is not null"], ["country = 'FR'"]]
-        //     // -> ["id = 5 AND name is not null", "country = 'FR'"]
-        //     $orWhere = array_map(function ($elts) {
-        //         return implode(" AND ", $elts);
-        //     }, $this->orWhere);
-
-        //     $sql .= " OR (" . implode(") OR (", $orWhere) . ")";
-        // }
 
         // return $sql;
     }

@@ -102,11 +102,12 @@ final class SelectTest extends TestCase
         $this->assertInstanceOf(Select::class, $select);
     }
 
-    public function testInvalidQuery()
+    public function testInvalidQueries()
     {
         $invalidQueries = [
             $this->getBuilder(),
             $this->getBuilder()->select(),
+            $this->getBuilder()->from('users'),
             $this->getBuilder()->where('id = 5')
         ];
 
@@ -115,7 +116,7 @@ final class SelectTest extends TestCase
 
         foreach ($invalidQueries as $query) {
             try {
-                $query->validate();
+                $query->toSQL();
             } catch (InvalidQueryException $e) {
                 $count++;
             }
@@ -142,6 +143,28 @@ final class SelectTest extends TestCase
             ->toSQL();
 
         $this->assertEquals('SELECT name, city AS c FROM users', $sql);
+    }
+
+    public function invalidTableNames()
+    {
+        return [
+            [1],
+            [9],
+            [false],
+            [new stdClass()]
+        ];
+    }
+
+    /**
+     * @dataProvider invalidTableNames
+     */
+    public function testInvalidTableNames($invalidName)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->getBuilder()
+            ->select()
+            ->from($invalidName);
     }
 
     public function testQueryWithWhereClause()
@@ -190,6 +213,20 @@ final class SelectTest extends TestCase
             ->toSQL();
 
         $expected = 'SELECT * FROM cars WHERE (doors = 5 AND year < 2000) OR (km < 1000) OR (seats = 2 AND wheels = 2)';
+
+        $this->assertEquals($expected, $sql);
+    }
+
+    public function testOrderBy()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->orderBy('brand', 'desc')
+            ->orderBy('year')
+            ->toSQL();
+
+        $expected = 'SELECT * FROM cars ORDER BY brand DESC, year ASC';
 
         $this->assertEquals($expected, $sql);
     }
