@@ -230,4 +230,49 @@ final class SelectTest extends TestCase
 
         $this->assertEquals($expected, $sql);
     }
+
+    public function testLimit()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->limit(10)
+            ->toSQL();
+
+        $this->assertEquals('SELECT * FROM cars LIMIT 10', $sql);
+    }
+
+    public function invalidLimits()
+    {
+        return [
+            ['12'],
+            [true],
+            [new stdClass()],
+            [3.5]
+        ];
+    }
+
+    /**
+     * @dataProvider invalidLimits
+     */
+    public function testInvalidLimits($invalidLimit)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->limit($invalidLimit);
+    }
+
+    public function testLimitAndOffset()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->limit(5, 10)
+            ->toSQL();
+
+        $this->assertEquals('SELECT * FROM cars LIMIT 10 OFFSET 5', $sql);
+    }
 }

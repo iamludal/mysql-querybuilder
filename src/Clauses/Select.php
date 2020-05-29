@@ -13,6 +13,8 @@ class Select extends Clause implements ClauseMethods
     private $columns = []; // columns to select
     private $conditions = []; // WHERE conditions
     private $order = []; // ORDER BY columns
+    private $LIMIT; // the LIMIT
+    private $OFFSET; // the OFFSET
 
     /**
      * Specify the columns to select.
@@ -116,8 +118,29 @@ class Select extends Clause implements ClauseMethods
         return $this;
     }
 
-    public function limit()
+    /**
+     * Add the LIMIT of rows to select
+     * 
+     * If $limit is omitted, then $param1 correspond to the OFFSET.
+     * Otherwise, $param1 corresponds to the LIMIT.
+     * 
+     * @param int $param1 either the LIMIT or the OFFSET (see docs)
+     * @param int $limit (optional) the LIMIT;
+     * @return $this
+     * @throws InvalidArgumentException if LIMIT and/or OFFSET is (are) not int
+     */
+    public function limit($param1, $limit = null)
     {
+        if (is_int($param1) && is_null($limit))
+            $this->LIMIT = $param1;
+        elseif (is_int($param1) && is_int($limit)) {
+            $this->LIMIT = $limit;
+            $this->OFFSET = $param1;
+        } else {
+            throw new InvalidArgumentException('LIMIT/OFFSET should be int');
+        }
+
+        return $this;
     }
 
     /**
@@ -161,14 +184,12 @@ class Select extends Clause implements ClauseMethods
         if ($this->order)
             $sql .= " ORDER BY " . implode(', ', $this->order);
 
+        if ($this->LIMIT)
+            $sql .= " LIMIT {$this->LIMIT}";
+
+        if ($this->OFFSET)
+            $sql .= " OFFSET {$this->OFFSET}";
+
         return $sql;
-
-        // if ($this->limit)
-        //     $sql .= " LIMIT {$this->limit}";
-
-        // if ($this->offset)
-        //     $sql .= " OFFSET {$this->offset}";
-
-        // return $sql;
     }
 }
