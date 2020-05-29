@@ -26,10 +26,7 @@ final class SelectTest extends TestCase
         return new Select($this->pdo);
     }
 
-    /**
-     * @beforeClass
-     */
-    public static function initPDO()
+    public static function setUpBeforeClass(): void
     {
         self::$pdo = new PDO('sqlite::memory:');
 
@@ -38,21 +35,6 @@ final class SelectTest extends TestCase
             `name` TEXT,
             `address` TEXT,
             `city` TEXT)');
-    }
-
-    /**
-     * @before
-     */
-    public function clearAndFillDatabase()
-    {
-        self::$pdo->exec('DELETE FROM users');
-
-        for ($i = 1; $i <= 10; $i++) {
-            $sql = "INSERT INTO users (`name`, `address`, `city`) VALUES ('User $i', 'Address $i', 'City $i')";
-            self::$pdo->exec($sql);
-        }
-
-        self::$pdo->exec("UPDATE users SET city = NULL WHERE id = 9");
     }
 
     public function badConstructorArguments()
