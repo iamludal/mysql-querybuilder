@@ -2,10 +2,10 @@
 
 namespace Ludal\QueryBuilder\Tests;
 
-use InvalidArgumentException;
-use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Clauses\Select;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use stdClass;
 use PDO;
 
@@ -267,13 +267,23 @@ final class SelectTest extends TestCase
 
     public function testLimitAndOffset()
     {
-        $sql = $this->getBuilder()
+        $sql1 = $this->getBuilder()
             ->select()
             ->from('cars')
             ->limit(5, 10)
             ->toSQL();
 
-        $this->assertEquals('SELECT * FROM cars LIMIT 10 OFFSET 5', $sql);
+        $sql2 = $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->limit(10)
+            ->offset(5)
+            ->toSQL();
+
+        $expected = 'SELECT * FROM cars LIMIT 10 OFFSET 5';
+
+        $this->assertEquals($expected, $sql1);
+        $this->assertEquals($expected, $sql2);
     }
 
     public function testOffset()
