@@ -21,4 +21,12 @@ abstract class Clause
 
         $this->pdo = $pdo;
     }
+
+
+    /**
+     * Validate the clause
+     * 
+     * @throws InvalidQueryException if the clause is invalid/incomplete
+     */
+    abstract protected function validate();
 }

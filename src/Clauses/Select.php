@@ -105,7 +105,7 @@ class Select extends Clause implements ClauseMethods
         $this->columns[] = $columnName;
     }
 
-    public function validate()
+    protected function validate()
     {
         $conditions = [
             $this->table != null
