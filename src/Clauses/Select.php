@@ -4,10 +4,9 @@ namespace Ludal\QueryBuilder\Clauses;
 
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\Clause;
-use Ludal\QueryBuilder\Clauses\ClauseMethods;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Select extends Clause implements ClauseMethods
+class Select extends Clause
 {
     private $table; // the table from which to select
     private $columns = []; // columns to select
