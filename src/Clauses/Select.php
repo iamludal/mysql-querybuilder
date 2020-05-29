@@ -144,6 +144,23 @@ class Select extends Clause implements ClauseMethods
     }
 
     /**
+     * Add the OFFSET
+     * 
+     * @param int $offset the offset
+     * @return $this
+     * @throws InvalidArgumentException if $offset is not an integer
+     */
+    public function offset($offset)
+    {
+        if (!is_int($offset))
+            throw new InvalidArgumentException('OFFSET should be an int');
+
+        $this->OFFSET = $offset;
+
+        return $this;
+    }
+
+    /**
      * Add a column to the SELECT clause
      * 
      * @param string $columnName the name of the column to add

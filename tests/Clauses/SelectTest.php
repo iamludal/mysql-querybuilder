@@ -275,4 +275,38 @@ final class SelectTest extends TestCase
 
         $this->assertEquals('SELECT * FROM cars LIMIT 10 OFFSET 5', $sql);
     }
+
+    public function testOffset()
+    {
+        $sql = $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->offset(5)
+            ->toSQL();
+
+        $this->assertEquals('SELECT * FROM cars OFFSET 5', $sql);
+    }
+
+    public function invalidOffsets()
+    {
+        return [
+            ["3"],
+            [true],
+            [new stdClass()],
+            [4.3]
+        ];
+    }
+
+    /**
+     * @dataProvider invalidOffsets
+     */
+    public function testInvalidOffset($invalidOffset)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->getBuilder()
+            ->select()
+            ->from('cars')
+            ->offset($invalidOffset);
+    }
 }
