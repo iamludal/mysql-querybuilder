@@ -2,6 +2,7 @@
 
 namespace Ludal\QueryBuilder\Clauses;
 
+use BadMethodCallException;
 use InvalidArgumentException;
 use PDOStatement;
 use PDO;
@@ -60,6 +61,8 @@ abstract class Clause
      */
     public function setFetchMode(...$args)
     {
+        if (is_null($this->pdo))
+            throw new BadMethodCallException('Cannot set fetch mode without a PDO instance');
         if (is_null($this->statement))
             $this->createStatement();
 
@@ -86,7 +89,9 @@ abstract class Clause
      */
     public function execute(...$args)
     {
-        if (is_null($this->statement))
+        if (is_null($this->pdo))
+            throw new BadMethodCallException('Cannot execute without a PDO instance');
+        elseif (is_null($this->statement))
             $this->createStatement();
 
         return $this->statement->execute(...$args);

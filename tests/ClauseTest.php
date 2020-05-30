@@ -2,13 +2,14 @@
 
 namespace Ludal\QueryBuilder\Tests;
 
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use PHPUnit\Framework\TestCase;
-use Error;
-use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
-use PDO;
+use BadMethodCallException;
 use stdClass;
+use Error;
+use PDO;
 
 final class ClauseTest extends TestCase
 {
@@ -129,9 +130,38 @@ final class ClauseTest extends TestCase
     {
         $this->expectException(InvalidQueryException::class);
 
-        $select = new Select(self::$pdo);
-        $select
+        $this->getSelect()
             ->from('')
             ->execute();
+    }
+
+    public function testExecuteWithoutPDO()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        (new Select())
+            ->select()
+            ->from('users')
+            ->execute();
+    }
+
+    public function testFetchWithoutPDO()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        (new Select())
+            ->select()
+            ->from('users')
+            ->fetch();
+    }
+
+    public function testSetFetchModeWithoutPDO()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        (new Select())
+            ->select()
+            ->from('users')
+            ->setFetchMode(PDO::FETCH_ASSOC);
     }
 }
