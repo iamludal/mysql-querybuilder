@@ -22,6 +22,9 @@ final class ClauseTest extends TestCase
         self::$pdo = new PDO('sqlite::memory:');
 
         self::$pdo->exec('CREATE TABLE users (id int, name text, city text)');
+
+        for ($i = 0; $i < 10; $i++)
+            self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
     }
 
     public static function tearDownAfterClass(): void
@@ -29,12 +32,9 @@ final class ClauseTest extends TestCase
         self::$pdo = null;
     }
 
-    public function setUp(): void
+    public static function getSelect()
     {
-        self::$pdo->exec('DELETE FROM users');
-
-        for ($i = 0; $i < 10; $i++)
-            self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
+        return new Select(self::$pdo);
     }
 
     public function testClauseCannotBeInstantiated()
@@ -43,36 +43,35 @@ final class ClauseTest extends TestCase
         new Clause();
     }
 
-    public function testFetchMethod()
+    public function testFetchAsClass()
     {
         $select = new Select(self::$pdo);
         $res = $select
             ->select()
             ->from('users')
             ->where('id = 5')
-            ->fetch(PDO::FETCH_OBJ);
+            ->setFetchMode(PDO::FETCH_CLASS, stdClass::class)
+            ->fetch();
 
         $this->assertEquals(5, $res->id);
+        $this->assertInstanceOf(stdClass::class, $res);
     }
 
-    public function testFetchAllMethod()
+    public function testFetchAllAsClass()
     {
-        $select = new Select(self::$pdo);
-        $res = $select
+        $res = self::getSelect()
             ->select()
             ->from('users')
             ->where('id < 5')
             ->fetchAll(PDO::FETCH_CLASS, stdClass::class);
 
         $length = count($res);
-        $i = 0;
 
         $this->assertEquals(5, $length);
 
-        foreach ($res as $element) {
+        foreach ($res as $index => $element) {
             $this->assertInstanceOf(stdClass::class, $element);
-            $this->assertEquals("User $i", $element->name);
-            $i++;
+            $this->assertEquals("User $index", $element->name);
         }
     }
 
@@ -80,10 +79,51 @@ final class ClauseTest extends TestCase
     {
         $this->expectException(InvalidQueryException::class);
 
-        $select = new Select(self::$pdo);
-        $select
+        self::getSelect()
             ->from('')
             ->fetch();
+    }
+
+    public function testFetchAsObject()
+    {
+        $result = self::getSelect()
+            ->select()
+            ->from('users')
+            ->fetch(PDO::FETCH_OBJ);
+
+        $this->assertIsObject($result);
+    }
+
+    public function testFetchAllAsObject()
+    {
+        $results = self::getSelect()
+            ->select()
+            ->from('users')
+            ->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($results as $result)
+            $this->assertIsObject($result);
+    }
+
+    public function testFetchAsArray()
+    {
+        $result = self::getSelect()
+            ->select()
+            ->from('users')
+            ->fetch();
+
+        $this->assertIsArray($result);
+    }
+
+    public function testFetchAllAsArray()
+    {
+        $results = self::getSelect()
+            ->select()
+            ->from('users')
+            ->fetchAll();
+
+        foreach ($results as $result)
+            $this->assertIsArray($result);
     }
 
     public function testInvalidQueryDoesntExecute()

@@ -48,20 +48,43 @@ abstract class Clause
     abstract public function toSQL(): string;
 
     /**
-     * Execute the current query
+     * Set the PDO fetch mode. Works exactly the same as
+     * PDOStatement::setFetchMode
      * 
-     * @param array $parameters (optional) the values to bind to the parameters,
-     * as you would do it with PDO.
+     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
+     */
+    public function setFetchMode(...$args)
+    {
+        if (is_null($this->statement))
+            $this->createStatement();
+
+        $this->statement->setFetchMode(...$args);
+        return $this;
+    }
+
+    /**
+     * Create a PDO statement from the current clause (sql)
+     */
+    public function createStatement()
+    {
+        $sql = $this->toSQL();
+        $this->statement = $this->pdo->prepare($sql);
+    }
+
+    /**
+     * Execute the current query. Works exactly the same as PDOStatement::execute
+     * 
      * @return bool TRUE on success or FALSE on failure
      * @throws PDOException On error if PDO::ERRMODE_EXCEPTION option is true.
      * @throws InvalidQueryException if the query is invalid/incomplete
      * @see https://www.php.net/manual/en/pdostatement.execute.php
      */
-    public function execute($values = null)
+    public function execute(...$args)
     {
-        $sql = $this->toSQL();
-        $this->statement = $this->pdo->prepare($sql);
-        return $this->statement->execute($values);
+        if (is_null($this->statement))
+            $this->createStatement();
+
+        return $this->statement->execute(...$args);
     }
 
     /**
@@ -70,11 +93,13 @@ abstract class Clause
      * 
      * @see https://www.php.net/manual/en/pdostatement.fetch.php
      */
-    public function fetch($fetch_style = null, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = 0)
+    public function fetch(...$args)
     {
-        $this->execute();
+        if (is_null($this->statement))
+            $this->execute();
+
         return $this->statement
-            ->fetch($fetch_style, $cursor_orientation, $cursor_offset);
+            ->fetch(...$args);
     }
 
     /**
@@ -83,10 +108,12 @@ abstract class Clause
      * 
      * @see php.net/manual/en/pdostatement.fetchall.php
      */
-    public function fetchAll($fetch_style = null, $fetch_argument = null, $ctor_args = array())
+    public function fetchAll(...$args)
     {
-        $this->execute();
+        if (is_null($this->statement))
+            $this->execute();
+
         return $this->statement
-            ->fetchAll($fetch_style, $fetch_argument, $ctor_args);
+            ->fetchAll(...$args);
     }
 }
