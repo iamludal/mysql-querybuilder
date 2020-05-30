@@ -19,6 +19,11 @@ abstract class Clause
     protected $statement;
 
     /**
+     * @var bool
+     */
+    protected $alreadyExecuted;
+
+    /**
      * Create a new clause
      * 
      * @param PDO $pdo (optional) a PDO instance to fetch/execute the clause
@@ -95,7 +100,7 @@ abstract class Clause
      */
     public function fetch(...$args)
     {
-        if (is_null($this->statement))
+        if (!$this->alreadyExecuted)
             $this->execute();
 
         return $this->statement
@@ -110,7 +115,7 @@ abstract class Clause
      */
     public function fetchAll(...$args)
     {
-        if (is_null($this->statement))
+        if (!$this->alreadyExecuted)
             $this->execute();
 
         return $this->statement
