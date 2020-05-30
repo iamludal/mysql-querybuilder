@@ -38,8 +38,7 @@ final class InsertTest extends TestCase
     {
         $invalidQueries = [
             $this->getBuilder(),
-            $this->getBuilder()->values(['name' => 'John']),
-            $this->getBuilder()->returning('id')
+            $this->getBuilder()->values(['name' => 'John'])
         ];
 
         foreach ($invalidQueries as $invalidQuery)
@@ -63,19 +62,6 @@ final class InsertTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
-    public function testInsertWithReturning()
-    {
-        $sql = $this->getBuilder()
-            ->into('cars')
-            ->values(['brand' => 'BMW', 'id' => 5])
-            ->returning('id', 'username')
-            ->toSQL();
-
-        $expected = 'INSERT INTO cars (brand, id) VALUES (:v1, :v2) RETURNING id, username';
-
-        $this->assertEquals($expected, $sql);
-    }
-
     public function testRowIsInserted()
     {
         $this->getBuilderWithPDO()
@@ -83,9 +69,7 @@ final class InsertTest extends TestCase
             ->values(['username' => 'Bob', 'id' => 5])
             ->execute();
 
-        $stmt = self::$pdo->prepare('SELECT * FROM users');
-        $stmt->execute();
-        $res = $stmt->fetchAll();
+        $res = self::$pdo->query('SELECT * FROM users')->fetchAll();
 
         $this->assertEquals(1, count($res));
         $this->assertEquals('Bob', $res[0]['username']);

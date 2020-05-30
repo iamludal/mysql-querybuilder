@@ -25,11 +25,6 @@ class Insert extends Clause
     private $values = [];
 
     /**
-     * @param string[] columns to return after the insert
-     */
-    private $returning = [];
-
-    /**
      * @var mixed[] params to bind (PDO)
      */
     private $params = [];
@@ -79,24 +74,6 @@ class Insert extends Clause
         return $this;
     }
 
-    /**
-     * Specify the columns to return from the insert
-     * 
-     * @param string[] ...$columns the columns
-     * @return $this
-     * @throws InvalidArgumentException if any column is not a string
-     */
-    public function returning(...$columns)
-    {
-        foreach ($columns as $column)
-            if (!is_string($column))
-                throw new InvalidArgumentException('Column should be a string');
-
-        $this->returning = $columns;
-
-        return $this;
-    }
-
     public function validate()
     {
         $conditions = [
@@ -115,13 +92,9 @@ class Insert extends Clause
 
         $table = $this->table;
         $columns = implode(', ', $this->columns);
-        $returning = implode(', ', $this->returning);
         $params = implode(', ', array_keys($this->params));
 
         $sql = "INSERT INTO $table ($columns) VALUES ($params)";
-
-        if ($this->returning)
-            $sql = "$sql RETURNING $returning";
 
         return $sql;
     }
