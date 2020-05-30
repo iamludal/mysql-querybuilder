@@ -10,7 +10,7 @@ This is a PHP query builder for SQL queries.
 
 ## 😃 Emojis legend
 
-Here is the legend for the commit messages emojis: https://gitmoji.carloscuesta.me/
+Legend for the commit messages emojis: [Commit emojis reference](gitmojis.md)
 
 
 ## 📘 Usage
