@@ -45,16 +45,15 @@ final class ClauseTest extends TestCase
 
     public function testFetchAsClass()
     {
-        $select = new Select(self::$pdo);
-        $res = $select
+        $res = self::getSelect()
             ->select()
             ->from('users')
             ->where('id = 5')
             ->setFetchMode(PDO::FETCH_CLASS, stdClass::class)
             ->fetch();
 
-        $this->assertEquals(5, $res->id);
         $this->assertInstanceOf(stdClass::class, $res);
+        $this->assertEquals(5, $res->id);
     }
 
     public function testFetchAllAsClass()
