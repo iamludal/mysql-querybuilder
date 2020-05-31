@@ -302,11 +302,14 @@ final class SelectTest extends TestCase
             ->offset($invalidOffset);
     }
 
-    public function testSelectAsSequentialArrayThrowsException()
+    public function testSelectAsSequential()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $sql = $this->getBuilder()
+            ->select(['name', 'age'])
+            ->from('users')
+            ->toSQL();
 
-        $this->getBuilder()->select(['name', 'user']);
+        $this->assertEquals('SELECT name, age FROM users', $sql);
     }
 
     public function testComplexQuery()
