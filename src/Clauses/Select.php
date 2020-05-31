@@ -19,8 +19,9 @@ class Select extends Clause
      * Specify the columns to select.
      * 
      * Each column should be either a string, which is the name of the column,
-     * or an array of length 2 of the form : [$columnName, $alias] (where
-     * $columnName and $alias are strings)
+     * or an associatve array of the form :
+     *      [$column1 => $alias1, $column2 => $alias2, ...]
+     * (where $columnX and $aliasX are strings)
      * 
      * @param string|array ...$columns (optional) the columns to select. Default: '*'
      * @return Select the instance
@@ -32,10 +33,10 @@ class Select extends Clause
         foreach ($columns as $column) {
             if (is_string($column))
                 $this->addColumn($column);
-            elseif (is_array($column) && count($column) == 2)
-                $this->addColumn($column[0], $column[1]);
-            else
-                throw new InvalidArgumentException("Argument should be a string or array of length 2");
+            elseif (is_array($column)) {
+                $this->addColumnsFromArray($column);
+            } else
+                throw new InvalidArgumentException("Argument should be a string or array");
         }
 
         if (!$columns)
@@ -172,6 +173,20 @@ class Select extends Clause
             $columnName = "$columnName AS $alias";
 
         $this->columns[] = $columnName;
+    }
+
+    /**
+     * Add columns from an array of the form:
+     *      [$column1, ..., $column2 => $alias2, ...]
+     * (where $columnX and $aliasX are strings)
+     */
+    private function addColumnsFromArray($array)
+    {
+        foreach ($array as $key => $value)
+            if (is_int($key))
+                $this->addColumn($value);
+            else
+                $this->addColumn($key, $value);
     }
 
     protected function validate()

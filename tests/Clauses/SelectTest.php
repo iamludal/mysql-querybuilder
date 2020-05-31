@@ -120,11 +120,11 @@ final class SelectTest extends TestCase
     public function testSimpleQueryWithColumnNames()
     {
         $sql = $this->getBuilder()
-            ->select('name', ['city', 'c'])
+            ->select('name', ['city' => 'c', 'age' => 'a'])
             ->from('users')
             ->toSQL();
 
-        $this->assertEquals('SELECT name, city AS c FROM users', $sql);
+        $this->assertEquals('SELECT name, city AS c, age AS a FROM users', $sql);
     }
 
     public function invalidTableNames()
@@ -302,10 +302,17 @@ final class SelectTest extends TestCase
             ->offset($invalidOffset);
     }
 
+    public function testSelectAsSequentialArrayThrowsException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->getBuilder()->select(['name', 'user']);
+    }
+
     public function testComplexQuery()
     {
         $sql = $this->getBuilder()
-            ->select('age', ['name', 'n'])
+            ->select(['name' => 'n'], 'age')
             ->from('users')
             ->where('id < :id', 'age < 20')
             ->orWhere('country = "FR"')
@@ -316,7 +323,7 @@ final class SelectTest extends TestCase
             ->offset(5)
             ->toSQL();
 
-        $expected = 'SELECT age, name AS n FROM users ';
+        $expected = 'SELECT name AS n, age FROM users ';
         $expected .= 'WHERE (id < :id AND age < 20) OR (country = "FR") OR (id < 30) ';
         $expected .= 'ORDER BY age DESC, name ASC LIMIT 10 OFFSET 5';
 
