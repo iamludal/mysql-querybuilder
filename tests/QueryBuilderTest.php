@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder\Tests;
 
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ final class QueryBuilderTest extends TestCase
     /**
      * @before
      */
-    public function getBuilder()
+    public function initBuilder()
     {
         $this->builder = new QueryBuilder();
     }
@@ -43,5 +44,13 @@ final class QueryBuilderTest extends TestCase
     {
         $select = $this->builder->select();
         $this->assertInstanceOf(Select::class, $select);
+    }
+
+    public function testInsertReturnsInstanceOfSelect()
+    {
+        $res = $this->builder
+            ->insertInto('articles');
+
+        $this->assertInstanceOf(Insert::class, $res);
     }
 }

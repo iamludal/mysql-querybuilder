@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder;
 
 use Ludal\QueryBuilder\Clauses\Select;
+use Ludal\QueryBuilder\Clauses\Insert;
 use InvalidArgumentException;
 use PDO;
 
@@ -34,5 +35,17 @@ class QueryBuilder
     public function select(...$columns)
     {
         return (new Select($this->pdo))->select(...$columns);
+    }
+
+    /**
+     * Corresponds to the sql INSERT INTO clause
+     * 
+     * @param string $table the table in which to insert values
+     * @return Insert
+     * @throws InvalidArgumentException if $table is not a string
+     */
+    public function insertInto($table)
+    {
+        return (new Insert($this->pdo))->into($table);
     }
 }
