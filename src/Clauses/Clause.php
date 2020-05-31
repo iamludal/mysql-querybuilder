@@ -4,6 +4,7 @@ namespace Ludal\QueryBuilder\Clauses;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Utils;
 use PDOStatement;
 use PDO;
 
@@ -61,8 +62,6 @@ abstract class Clause
      */
     public function setFetchMode(...$args)
     {
-        if (is_null($this->pdo))
-            throw new BadMethodCallException('Cannot set fetch mode without a PDO instance');
         if (is_null($this->statement))
             $this->createStatement();
 
@@ -71,10 +70,38 @@ abstract class Clause
     }
 
     /**
+     * Bind a value to a prepared parameter
+     * 
+     * @param string $param the name of the parameter
+     * @param mixed $value the the value to bind to the parameter
+     * @param int $type (optional) the PDO type of the value (PDO::PARAM_INT, ...)
+     * if omitted, the class will automatically detect the corresponding PDO
+     * type of the value
+     * @return $this
+     * @throws BadMethodCallException if there is no PDO instance
+     */
+    public function setParam($param, $value, $type = null)
+    {
+        if (is_null($this->statement))
+            $this->createStatement();
+
+        $PDOType = is_null($type) ? Utils::getPDOType($value) : $type;
+
+        $this->statement->bindParam($param, $value, $PDOType);
+
+        return $this;
+    }
+
+    /**
      * Create a PDO statement from the current clause (sql)
+     * 
+     * @throws BadMethodCallException if there is no PDO instance
      */
     public function createStatement()
     {
+        if (is_null($this->pdo))
+            throw new BadMethodCallException('No PDO instance specified');
+
         $sql = $this->toSQL();
         $this->statement = $this->pdo->prepare($sql);
     }
@@ -85,6 +112,7 @@ abstract class Clause
      * @return bool TRUE on success or FALSE on failure
      * @throws PDOException On error if PDO::ERRMODE_EXCEPTION option is true.
      * @throws InvalidQueryException if the query is invalid/incomplete
+     * @throws BadMethodCallException if there is no PDO instance
      * @see https://www.php.net/manual/en/pdostatement.execute.php
      */
     public function execute(...$args)
@@ -93,6 +121,8 @@ abstract class Clause
             throw new BadMethodCallException('Cannot execute without a PDO instance');
         elseif (is_null($this->statement))
             $this->createStatement();
+
+        $this->alreadyExecuted = true;
 
         return $this->statement->execute(...$args);
     }

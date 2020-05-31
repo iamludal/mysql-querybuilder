@@ -164,4 +164,28 @@ final class ClauseTest extends TestCase
             ->from('users')
             ->setFetchMode(PDO::FETCH_ASSOC);
     }
+
+    public function testSetParamWithoutType()
+    {
+        $result = $this->getSelect()
+            ->select()
+            ->from('users')
+            ->where('id = :id')
+            ->setParam(':id', 5)
+            ->fetch();
+
+        $this->assertEquals(5, $result['id']);
+    }
+
+    public function testSetParamWithType()
+    {
+        $result = $this->getSelect()
+            ->select()
+            ->from('users')
+            ->where('name = :name')
+            ->setParam(':name', 'User 3', PDO::PARAM_STR)
+            ->fetch();
+
+        $this->assertEquals('User 3', $result['name']);
+    }
 }
