@@ -3,9 +3,9 @@
 | Emoji | Meaning        |
 | ----- | -------------- |
 | 🎉     | Initial commit |
-| 📦     | NEW            |
-| 👌     | IMPROVE        |
-| 🐛     | FIX            |
-| 📖     | DOC            |
-| 🚀     | RELEASE        |
-| ✅     | TEST           |
+| 📦     | New (file...)  |
+| 👌     | Improvement    |
+| 🐛     | Fix            |
+| 📖     | Docs           |
+| 🚀     | Release        |
+| ✅     | Tests          |
