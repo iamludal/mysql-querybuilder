@@ -67,7 +67,7 @@ class Select extends Clause
     /**
      * Add a select condition (WHERE clause)
      * 
-     * @param string $condition the condition
+     * @param string[] ...$conditions the condition
      * @return $this
      * @throws InvalidArgumentException if any condition is not a string
      */
