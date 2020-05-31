@@ -301,4 +301,25 @@ final class SelectTest extends TestCase
             ->from('cars')
             ->offset($invalidOffset);
     }
+
+    public function testComplexQuery()
+    {
+        $sql = $this->getBuilder()
+            ->select('age', ['name', 'n'])
+            ->from('users')
+            ->where('id < :id', 'age < 20')
+            ->orWhere('country = "FR"')
+            ->orWhere('id < 30')
+            ->orderBy('age', 'desc')
+            ->orderBy('name')
+            ->limit(10)
+            ->offset(5)
+            ->toSQL();
+
+        $expected = 'SELECT age, name AS n FROM users ';
+        $expected .= 'WHERE (id < :id AND age < 20) OR (country = "FR") OR (id < 30) ';
+        $expected .= 'ORDER BY age DESC, name ASC LIMIT 10 OFFSET 5';
+
+        $this->assertEquals($expected, $sql);
+    }
 }
