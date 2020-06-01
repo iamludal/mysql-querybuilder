@@ -34,7 +34,7 @@ class QueryBuilder
      */
     public function select(...$columns)
     {
-        return (new Select($this->pdo))->select(...$columns);
+        return (new Select($this->pdo))->setColumns(...$columns);
     }
 
     /**

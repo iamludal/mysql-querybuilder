@@ -47,7 +47,7 @@ final class ClauseTest extends TestCase
     public function testFetchAsClass()
     {
         $res = self::getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->where('id = 5')
             ->setFetchMode(PDO::FETCH_CLASS, stdClass::class)
@@ -60,7 +60,7 @@ final class ClauseTest extends TestCase
     public function testFetchAllAsClass()
     {
         $res = self::getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->where('id < 5')
             ->fetchAll(PDO::FETCH_CLASS, stdClass::class);
@@ -87,7 +87,7 @@ final class ClauseTest extends TestCase
     public function testFetchAsObject()
     {
         $result = self::getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->fetch(PDO::FETCH_OBJ);
 
@@ -97,7 +97,7 @@ final class ClauseTest extends TestCase
     public function testFetchAllAsObject()
     {
         $results = self::getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->fetchAll(PDO::FETCH_OBJ);
 
@@ -108,7 +108,7 @@ final class ClauseTest extends TestCase
     public function testFetchAsArray()
     {
         $result = self::getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->fetch();
 
@@ -118,7 +118,7 @@ final class ClauseTest extends TestCase
     public function testFetchAllAsArray()
     {
         $results = self::getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->fetchAll();
 
@@ -140,7 +140,7 @@ final class ClauseTest extends TestCase
         $this->expectException(BadMethodCallException::class);
 
         (new Select())
-            ->select()
+            ->setColumns()
             ->from('users')
             ->execute();
     }
@@ -150,7 +150,7 @@ final class ClauseTest extends TestCase
         $this->expectException(BadMethodCallException::class);
 
         (new Select())
-            ->select()
+            ->setColumns()
             ->from('users')
             ->fetch();
     }
@@ -160,7 +160,7 @@ final class ClauseTest extends TestCase
         $this->expectException(BadMethodCallException::class);
 
         (new Select())
-            ->select()
+            ->setColumns()
             ->from('users')
             ->setFetchMode(PDO::FETCH_ASSOC);
     }
@@ -168,7 +168,7 @@ final class ClauseTest extends TestCase
     public function testSetParamWithoutType()
     {
         $result = $this->getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->where('id = :id')
             ->setParam(':id', 5)
@@ -180,7 +180,7 @@ final class ClauseTest extends TestCase
     public function testSetParamWithType()
     {
         $result = $this->getSelect()
-            ->select()
+            ->setColumns()
             ->from('users')
             ->where('name = :name')
             ->setParam(':name', 'User 3', PDO::PARAM_STR)

@@ -26,7 +26,7 @@ class Select extends Clause
      * @param string|array ...$columns (optional) the columns to select. Default: '*'
      * @return Select the instance
      */
-    public function select(...$columns)
+    public function setColumns(...$columns)
     {
         $this->columns = [];
 
