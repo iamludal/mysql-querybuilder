@@ -7,6 +7,7 @@ use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use BadMethodCallException;
 use stdClass;
 use Error;
@@ -272,5 +273,33 @@ final class ClauseTest extends TestCase
             ->setColumns()
             ->from('users')
             ->rowCount();
+    }
+
+    public function testSetParams()
+    {
+        $results = $this->getSelect()
+            ->setColumns()
+            ->from('users')
+            ->where('id = :id')
+            ->orWhere('name = :name')
+            ->setParams([':name' => 'User 0', ':id' => 1])
+            ->fetchAll();
+
+        $this->assertEquals(2, count($results));
+
+        $this->assertContains($results[0]->name, ['User 0', 'User 1']);
+        $this->assertContains($results[1]->name, ['User 0', 'User 1']);
+    }
+
+    public function testSetParamsWithSequentialArrayThrowsException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->getSelect()
+            ->setColumns()
+            ->from('users')
+            ->where('id = :id')
+            ->orWhere('name = :name')
+            ->setParams([1, 'User 0']);
     }
 }
