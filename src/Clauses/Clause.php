@@ -95,15 +95,35 @@ abstract class Clause
      * type of the value
      * @return $this
      * @throws BadMethodCallException if there is no PDO instance
+     * @throws InvalidArgumentException if $param is not a string
      */
     public function setParam($param, $value, $type = null)
     {
-        if (is_null($this->statement))
+        if (!is_string($param))
+            throw new InvalidArgumentException('Param name should be a string');
+        elseif (is_null($this->statement))
             $this->createStatement();
 
         $PDOType = is_null($type) ? Utils::getPDOType($value) : $type;
 
         $this->statement->bindParam($param, $value, $PDOType);
+
+        return $this;
+    }
+
+    /**
+     * Set multiple params at a time from an associative array that contains
+     * params names as key and param values as values
+     * 
+     * @param mixed[] $params params to set : [':param1' => $value1, ...]
+     * @return $this
+     * @throws BadMethodCallException if there is no PDO instance set
+     * @throws InvalidArgumentException if $params is not an associative array
+     */
+    public function setParams($params)
+    {
+        foreach ($params as $key => $value)
+            $this->setParam($key, $value);
 
         return $this;
     }
