@@ -5,6 +5,7 @@ namespace Ludal\QueryBuilder\Tests;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
+use Ludal\QueryBuilder\Clauses\Insert;
 use PHPUnit\Framework\TestCase;
 use BadMethodCallException;
 use stdClass;
@@ -36,6 +37,11 @@ final class ClauseTest extends TestCase
     public static function getSelect()
     {
         return new Select(self::$pdo);
+    }
+
+    public static function getInsert()
+    {
+        return new Insert(self::$pdo);
     }
 
     public function testClauseCannotBeInstantiated()
@@ -236,5 +242,35 @@ final class ClauseTest extends TestCase
             ->fetch();
 
         $this->assertFalse($result);
+    }
+
+    public function testSelectRowCount()
+    {
+        $count = $this->getSelect()
+            ->setColumns()
+            ->from('users')
+            ->rowCount();
+
+        $this->assertEquals(0, $count); // because rowCount doesn't work on SELECT
+    }
+
+    public function testInsertRowCount()
+    {
+        $count = $this->getInsert()
+            ->into('users')
+            ->values(['id' => 10, 'name' => 'User 10'])
+            ->rowCount();
+
+        $this->assertEquals(1, $count);
+    }
+
+    public function testRowCountWithoutPDOInstance()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        (new Select())
+            ->setColumns()
+            ->from('users')
+            ->rowCount();
     }
 }
