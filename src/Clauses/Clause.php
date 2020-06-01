@@ -2,9 +2,9 @@
 
 namespace Ludal\QueryBuilder\Clauses;
 
-use BadMethodCallException;
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Utils;
+use BadMethodCallException;
 use PDOStatement;
 use PDO;
 
@@ -23,7 +23,12 @@ abstract class Clause
     /**
      * @var bool
      */
-    protected $alreadyExecuted;
+    private $alreadyExecuted;
+
+    /**
+     * @var mixed[]
+     */
+    private static $fetchArgs = [];
 
     /**
      * Create a new clause
@@ -70,6 +75,17 @@ abstract class Clause
     }
 
     /**
+     * Set the default fetch mode for all `Clause` instances
+     * 
+     * @param int $fetchArgs PDO fetch args
+     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
+     */
+    public static function setDefaultFetchMode(...$fetchArgs)
+    {
+        self::$fetchArgs = $fetchArgs;
+    }
+
+    /**
      * Bind a value to a prepared parameter
      * 
      * @param string $param the name of the parameter
@@ -104,6 +120,9 @@ abstract class Clause
 
         $sql = $this->toSQL();
         $this->statement = $this->pdo->prepare($sql);
+
+        if (self::$fetchArgs)
+            $this->statement->setFetchMode(...self::$fetchArgs);
     }
 
     /**

@@ -2,23 +2,42 @@
 
 namespace Ludal\QueryBuilder\Tests;
 
-use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\QueryBuilder;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use stdClass;
+use PDO;
 
 final class QueryBuilderTest extends TestCase
 {
-    private $builder;
+    /**
+     * @var PDO
+     */
+    private static $pdo;
 
     /**
-     * @before
+     * @var QueryBuilder
      */
-    public function initBuilder()
+    private $builder;
+
+    public static function setUpBeforeClass(): void
     {
+        self::$pdo = new PDO('sqlite::memory:');
+
+        self::$pdo->exec('CREATE TABLE users (id int, name text, city text)');
+    }
+
+    public function setUp(): void
+    {
+        self::$pdo->exec('DELETE FROM users');
+
+        for ($i = 0; $i < 10; $i++)
+            self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
+
         $this->builder = new QueryBuilder();
+        $this->builderWithPDO = new QueryBuilder(self::$pdo);
     }
 
     public function invalidConstructorArguments()
@@ -52,5 +71,28 @@ final class QueryBuilderTest extends TestCase
             ->insertInto('articles');
 
         $this->assertInstanceOf(Insert::class, $res);
+    }
+
+    public function testSetDefaultFetchMode()
+    {
+        QueryBuilder::setDefaultFetchMode(PDO::FETCH_ASSOC);
+
+        $results = (new QueryBuilder(self::$pdo))
+            ->select()
+            ->from('users')
+            ->fetchAll();
+
+        foreach ($results as $result)
+            $this->assertIsArray($result);
+
+        QueryBuilder::setDefaultFetchMode(PDO::FETCH_OBJ);
+
+        $results = (new QueryBuilder(self::$pdo))
+            ->select()
+            ->from('users')
+            ->fetchAll();
+
+        foreach ($results as $result)
+            $this->assertIsObject($result);
     }
 }

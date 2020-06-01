@@ -188,4 +188,42 @@ final class ClauseTest extends TestCase
 
         $this->assertEquals('User 3', $result['name']);
     }
+
+    public function testSetDefaultFetchMode()
+    {
+        $result = $this->getSelect()
+            ->setColumns()
+            ->from('users')
+            ->fetch();
+
+        $this->assertIsArray($result); // default PDO fetch mode
+
+        Clause::setDefaultFetchMode(PDO::FETCH_CLASS, stdClass::class);
+
+        $result = $this->getSelect()
+            ->setColumns()
+            ->from('users')
+            ->fetch();
+
+        $this->assertInstanceOf(stdClass::class, $result);
+    }
+
+    public function testSetDefaultFetchModeOnTwoDifferentInstances()
+    {
+        Clause::setDefaultFetchMode(PDO::FETCH_CLASS, stdClass::class);
+
+        $result = (new Select(self::$pdo))
+            ->setColumns()
+            ->from('users')
+            ->fetch();
+
+        $this->assertInstanceOf(stdClass::class, $result);
+
+        $result = (new Select(self::$pdo))
+            ->setColumns()
+            ->from('users')
+            ->fetch();
+
+        $this->assertInstanceOf(stdClass::class, $result);
+    }
 }

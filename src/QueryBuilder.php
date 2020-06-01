@@ -2,6 +2,7 @@
 
 namespace Ludal\QueryBuilder;
 
+use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
 use InvalidArgumentException;
@@ -47,5 +48,16 @@ class QueryBuilder
     public function insertInto($table)
     {
         return (new Insert($this->pdo))->into($table);
+    }
+
+    /**
+     * Set the PDO fetch mode. Works exactly the same as
+     * PDOStatement::setFetchMode
+     * 
+     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
+     */
+    public static function setDefaultFetchMode(...$fetchArgs)
+    {
+        Clause::setDefaultFetchMode(...$fetchArgs);
     }
 }
