@@ -83,7 +83,7 @@ class Insert extends Clause
         ];
 
         if (in_array(false, $conditions))
-            throw new InvalidQueryException('The query is invalid or incomplete');
+            throw new InvalidQueryException('Query is invalid or incomplete');
     }
 
     public function toSQL(): string
