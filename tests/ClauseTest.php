@@ -226,4 +226,15 @@ final class ClauseTest extends TestCase
 
         $this->assertInstanceOf(stdClass::class, $result);
     }
+
+    public function testFetchWithNoExistingRow()
+    {
+        $result = $this->getSelect()
+            ->setColumns()
+            ->from('users')
+            ->where('id = 20')
+            ->fetch();
+
+        $this->assertFalse($result);
+    }
 }
