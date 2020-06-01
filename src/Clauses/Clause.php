@@ -109,6 +109,23 @@ abstract class Clause
     }
 
     /**
+     * Return the number of rows affected by the execution of the query.
+     * 
+     * You can call this method directly on the builder : if the query has
+     * not been executed yet, it will execute it automatically
+     * 
+     * @return int the row count
+     * @throws BadMethodCallException if there is no statement
+     */
+    public function rowCount()
+    {
+        if (!$this->alreadyExecuted)
+            $this->execute();
+
+        return $this->statement->rowCount();
+    }
+
+    /**
      * Create a PDO statement from the current clause (sql)
      * 
      * @throws BadMethodCallException if there is no PDO instance
