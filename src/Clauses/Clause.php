@@ -113,7 +113,9 @@ abstract class Clause
 
     /**
      * Set multiple params at a time from an associative array that contains
-     * params names as key and param values as values
+     * params names as key and param values as values.
+     * 
+     * PDO params types are automatically guessed by the class
      * 
      * @param mixed[] $params params to set : [':param1' => $value1, ...]
      * @return $this
