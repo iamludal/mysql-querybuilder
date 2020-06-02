@@ -4,6 +4,7 @@ namespace Ludal\QueryBuilder\Tests;
 
 use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Select;
+use Ludal\QueryBuilder\Clauses\Update;
 use Ludal\QueryBuilder\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
@@ -94,5 +95,12 @@ final class QueryBuilderTest extends TestCase
 
         foreach ($results as $result)
             $this->assertIsObject($result);
+    }
+
+    public function testUpdateReturnsInstanceOfUpdate()
+    {
+        $update = $this->builder->update('users');
+
+        $this->assertInstanceOf(Update::class, $update);
     }
 }
