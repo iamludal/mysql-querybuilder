@@ -5,6 +5,7 @@ namespace Ludal\QueryBuilder\Clauses;
 use Ludal\QueryBuilder\Clauses\Clause;
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Utils;
 
 class Update extends Clause
 {
@@ -154,5 +155,18 @@ class Update extends Clause
         }
 
         return $sql;
+    }
+
+    public function execute(...$args)
+    {
+        $sql = $this->toSQL();
+        $this->statement = $this->pdo->prepare($sql);
+
+        foreach ($this->values as $key => $value) {
+            $type = Utils::getPDOType($value);
+            $this->statement->bindValue($key, $value, $type);
+        }
+
+        return $this->statement->execute();
     }
 }
