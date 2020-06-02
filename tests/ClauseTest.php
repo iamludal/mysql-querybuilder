@@ -6,6 +6,7 @@ use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
+use Ludal\QueryBuilder\Clauses\Update;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use BadMethodCallException;
@@ -20,6 +21,21 @@ final class ClauseTest extends TestCase
      */
     private static $pdo;
 
+    /**
+     * @var Select
+     */
+    private $select;
+
+    /**
+     * @var Insert 
+     */
+    private $insert;
+
+    /**
+     * @var Update
+     */
+    private $update;
+
     public static function setUpBeforeClass(): void
     {
         self::$pdo = new PDO('sqlite::memory:');
@@ -28,6 +44,20 @@ final class ClauseTest extends TestCase
 
         for ($i = 0; $i < 10; $i++)
             self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
+    }
+
+    public function setUp(): void
+    {
+        // clear db
+        self::$pdo->exec('DELETE FROM users');
+
+        // fill db
+        for ($i = 0; $i < 10; $i++)
+            self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
+
+        $this->select = new Select(self::$pdo);
+        $this->insert = new Insert(self::$pdo);
+        $this->update = new Update(self::$pdo);
     }
 
     public static function tearDownAfterClass(): void
@@ -53,7 +83,7 @@ final class ClauseTest extends TestCase
 
     public function testFetchAsClass()
     {
-        $res = self::getSelect()
+        $res = $this->select
             ->setColumns()
             ->from('users')
             ->where('id = 5')
@@ -66,7 +96,7 @@ final class ClauseTest extends TestCase
 
     public function testFetchAllAsClass()
     {
-        $res = self::getSelect()
+        $res = $this->select
             ->setColumns()
             ->from('users')
             ->where('id < 5')
@@ -86,14 +116,14 @@ final class ClauseTest extends TestCase
     {
         $this->expectException(InvalidQueryException::class);
 
-        self::getSelect()
+        $this->select
             ->from('')
             ->fetch();
     }
 
     public function testFetchAsObject()
     {
-        $result = self::getSelect()
+        $result = $this->select
             ->setColumns()
             ->from('users')
             ->fetch(PDO::FETCH_OBJ);
@@ -103,7 +133,7 @@ final class ClauseTest extends TestCase
 
     public function testFetchAllAsObject()
     {
-        $results = self::getSelect()
+        $results = $this->select
             ->setColumns()
             ->from('users')
             ->fetchAll(PDO::FETCH_OBJ);
@@ -114,7 +144,7 @@ final class ClauseTest extends TestCase
 
     public function testFetchAsArray()
     {
-        $result = self::getSelect()
+        $result = $this->select
             ->setColumns()
             ->from('users')
             ->fetch();
@@ -124,7 +154,7 @@ final class ClauseTest extends TestCase
 
     public function testFetchAllAsArray()
     {
-        $results = self::getSelect()
+        $results = $this->select
             ->setColumns()
             ->from('users')
             ->fetchAll();
@@ -137,7 +167,7 @@ final class ClauseTest extends TestCase
     {
         $this->expectException(InvalidQueryException::class);
 
-        $this->getSelect()
+        $this->select
             ->from('')
             ->execute();
     }
@@ -174,7 +204,7 @@ final class ClauseTest extends TestCase
 
     public function testSetParamWithoutType()
     {
-        $result = $this->getSelect()
+        $result = $this->select
             ->setColumns()
             ->from('users')
             ->where('id = :id')
@@ -186,7 +216,7 @@ final class ClauseTest extends TestCase
 
     public function testSetParamWithType()
     {
-        $result = $this->getSelect()
+        $result = $this->select
             ->setColumns()
             ->from('users')
             ->where('name = :name')
@@ -198,7 +228,7 @@ final class ClauseTest extends TestCase
 
     public function testSetDefaultFetchMode()
     {
-        $result = $this->getSelect()
+        $result = (new Select(self::$pdo))
             ->setColumns()
             ->from('users')
             ->fetch();
@@ -207,7 +237,7 @@ final class ClauseTest extends TestCase
 
         Clause::setDefaultFetchMode(PDO::FETCH_CLASS, stdClass::class);
 
-        $result = $this->getSelect()
+        $result = (new Select(self::$pdo))
             ->setColumns()
             ->from('users')
             ->fetch();
@@ -219,14 +249,7 @@ final class ClauseTest extends TestCase
     {
         Clause::setDefaultFetchMode(PDO::FETCH_CLASS, stdClass::class);
 
-        $result = (new Select(self::$pdo))
-            ->setColumns()
-            ->from('users')
-            ->fetch();
-
-        $this->assertInstanceOf(stdClass::class, $result);
-
-        $result = (new Select(self::$pdo))
+        $result = $this->select
             ->setColumns()
             ->from('users')
             ->fetch();
@@ -236,7 +259,7 @@ final class ClauseTest extends TestCase
 
     public function testFetchWithNoExistingRow()
     {
-        $result = $this->getSelect()
+        $result = $this->select
             ->setColumns()
             ->from('users')
             ->where('id = 20')
@@ -247,7 +270,7 @@ final class ClauseTest extends TestCase
 
     public function testSelectRowCount()
     {
-        $count = $this->getSelect()
+        $count = $this->select
             ->setColumns()
             ->from('users')
             ->rowCount();
@@ -255,14 +278,25 @@ final class ClauseTest extends TestCase
         $this->assertEquals(0, $count); // because rowCount doesn't work on SELECT
     }
 
-    public function testInsertRowCount()
+    public function testInsertRowCountOnInsert()
     {
-        $count = $this->getInsert()
+        $count = $this->insert
             ->into('users')
             ->values(['id' => 10, 'name' => 'User 10'])
             ->rowCount();
 
         $this->assertEquals(1, $count);
+    }
+
+    public function testInsertRowCountOnUpdate()
+    {
+        $count = $this->update
+            ->setTable('users')
+            ->set('id = id + 1')
+            ->where('id > 5')
+            ->rowCount();
+
+        $this->assertEquals(4, $count);
     }
 
     public function testRowCountWithoutPDOInstance()
@@ -277,7 +311,7 @@ final class ClauseTest extends TestCase
 
     public function testSetParams()
     {
-        $results = $this->getSelect()
+        $results = $this->select
             ->setColumns()
             ->from('users')
             ->where('id = :id')
@@ -295,7 +329,7 @@ final class ClauseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->getSelect()
+        $this->select
             ->setColumns()
             ->from('users')
             ->where('id = :id')
