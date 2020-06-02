@@ -5,6 +5,7 @@ namespace Ludal\QueryBuilder;
 use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
+use Ludal\QueryBuilder\Clauses\Update;
 use InvalidArgumentException;
 use PDO;
 
@@ -48,6 +49,18 @@ class QueryBuilder
     public function insertInto($table)
     {
         return (new Insert($this->pdo))->into($table);
+    }
+
+    /**
+     * Corresponds to the sql UPDATE clause
+     * 
+     * @param string $table the table to update
+     * @return Update
+     * @throws InvalidArgumentException if $table is not a string
+     */
+    public function update($table)
+    {
+        return (new Update($this->pdo))->setTable($table);
     }
 
     /**
