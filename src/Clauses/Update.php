@@ -91,7 +91,7 @@ class Update extends Clause
     /**
      * Set the update conditions
      * 
-     * @param string[] $conditions the conditions
+     * @param string[] ...$conditions the conditions
      * @return $this
      * @throws InvalidArgumentException if any $condition is not a string
      */
@@ -103,6 +103,24 @@ class Update extends Clause
 
         if ($conditions)
             $this->conditions[] = implode(' AND ', $conditions);
+
+        return $this;
+    }
+
+    /**
+     * Add conditions to be joined with the previous ones with OR
+     * 
+     * @param string[] ...$conditions the conditions
+     * @return $this
+     * @throws InvalidArgumentException if any $condition is not a string
+     */
+    public function orWhere(...$conditions)
+    {
+        foreach ($conditions as $condition)
+            if (!is_string($condition))
+                throw new InvalidArgumentException('Condition should be a string');
+
+        $this->conditions[] = implode(' AND ', $conditions);
 
         return $this;
     }
