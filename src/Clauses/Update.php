@@ -54,14 +54,21 @@ class Update extends Clause
     /**
      * Set the values to update
      * 
-     * @param mixed[] $values an associative array of the form [$col => $val, ...]
+     * @param mixed[]|string ...$values an associative array of the form
+     * [$col => $val, ...] or a string, that is directly the value to set,
+     * for instace: "id = 5"
      * @return $this
-     * @throws InvalidArgumentException if $values is not an associative array
+     * @throws InvalidArgumentException if $values is neither an associative
+     * array nor a string
      */
-    public function set($values)
+    public function set(...$values)
     {
-        foreach ($values as $key => $value)
-            $this->setValue($key, $value);
+        foreach ($values as $value)
+            if (is_string($value))
+                $this->params[] = $value;
+            elseif (is_array($value))
+                foreach ($value as $key => $val)
+                    $this->setValue($key, $val);
 
         return $this;
     }
