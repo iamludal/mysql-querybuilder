@@ -4,6 +4,7 @@ namespace Ludal\QueryBuilder\Tests\Clauses;
 
 use Ludal\QueryBuilder\Clauses\Update;
 use PHPUnit\Framework\TestCase;
+use PDO;
 
 final class UpdateTest extends TestCase
 {
@@ -12,9 +13,26 @@ final class UpdateTest extends TestCase
      */
     private $builder;
 
+    /**
+     * @var PDO
+     */
+    private static $pdo;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$pdo = new PDO('sqlite::memory:');
+
+        self::$pdo->exec('CREATE TABLE users (id int, name text, city text)');
+    }
+
     public function setUp(): void
     {
-        $this->builder = new Update();
+        self::$pdo->exec('DELETE FROM users');
+
+        for ($i = 0; $i < 10; $i++)
+            self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
+
+        $this->builder = new Update(self::$pdo);
     }
 
     public function testSimpleQuery()
@@ -69,5 +87,25 @@ final class UpdateTest extends TestCase
         $expected .= 'OR (km > 100000) OR (color = "red")';
 
         $this->assertEquals($expected, $sql);
+    }
+
+    public function testQueryUpdatesTheDatabase()
+    {
+        $user = self::$pdo->query('SELECT * FROM users WHERE id = 9')
+            ->fetch();
+
+        $this->assertEquals('User 9', $user['name']);
+
+
+        $this->builder
+            ->setTable('users')
+            ->set(['name' => 'New user 9'])
+            ->where('id = 9')
+            ->execute();
+
+        $user = self::$pdo->query('SELECT * FROM users WHERE id = 9')
+            ->fetch();
+
+        $this->assertEquals('New user 9', $user['name']);
     }
 }
