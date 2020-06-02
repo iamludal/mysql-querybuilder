@@ -42,6 +42,18 @@ final class UpdateTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
+    public function testSetWithDifferentTyps()
+    {
+        $sql = $this->builder
+            ->setTable('users')
+            ->set(['name' => 'Ludal', 'age' => 20], 'id = 20')
+            ->toSQL();
+
+        $expected = 'UPDATE users SET name = :v1, age = :v2, id = 20';
+
+        $this->assertEquals($expected, $sql);
+    }
+
     public function testQueryWithComplexConditions()
     {
         $sql = $this->builder
