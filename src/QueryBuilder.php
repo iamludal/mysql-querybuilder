@@ -7,6 +7,7 @@ use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Update;
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Clauses\Delete;
 use PDO;
 
 class QueryBuilder
@@ -61,6 +62,18 @@ class QueryBuilder
     public function update($table)
     {
         return (new Update($this->pdo))->setTable($table);
+    }
+
+    /**
+     * Corresponds to the sql DELETE FROM clause
+     * 
+     * @param string $table the table from which to delete rows
+     * @return Delete
+     * @throws InvalidArgumentException if $table is not a string
+     */
+    public function deleteFrom($table)
+    {
+        return (new Delete($this->pdo))->from($table);
     }
 
     /**
