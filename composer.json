@@ -28,5 +28,6 @@
         "query builder",
         "query",
         "builder"
-    ]
+    ],
+    "version": "0.1"
 }
