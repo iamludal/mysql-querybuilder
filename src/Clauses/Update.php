@@ -2,9 +2,8 @@
 
 namespace Ludal\QueryBuilder\Clauses;
 
-use Ludal\QueryBuilder\Clauses\Clause;
-use InvalidArgumentException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use InvalidArgumentException;
 use Ludal\QueryBuilder\Utils;
 
 class Update extends Clause
@@ -145,6 +144,8 @@ class Update extends Clause
 
     public function toSQL(): string
     {
+        $this->validate();
+
         $sql = "UPDATE {$this->table} SET ";
 
         $sql .= implode(', ', $this->params);
