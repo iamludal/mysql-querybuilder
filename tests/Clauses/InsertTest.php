@@ -62,6 +62,15 @@ final class InsertTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
+    public function testIncompleteQuery()
+    {
+        $this->expectException(InvalidQueryException::class);
+
+        $sql = $this->getBuilder()
+            ->values(['username' => 'Billy', 'id' => 5])
+            ->toSQL();
+    }
+
     public function testRowIsInserted()
     {
         $this->getBuilderWithPDO()
