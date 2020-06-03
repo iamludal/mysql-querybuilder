@@ -5,7 +5,7 @@
 
 ## ℹ️ Presentation
 
-This is a PHP query builder for SQL queries.
+This is a PHP query builder for simple SQL queries.
 
 
 ## 😃 Emojis legend
