@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder\Tests\Clauses;
 
 use Ludal\QueryBuilder\Clauses\Update;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PHPUnit\Framework\TestCase;
 use PDO;
 
@@ -107,5 +108,24 @@ final class UpdateTest extends TestCase
             ->fetch();
 
         $this->assertEquals('New user 9', $user['name']);
+    }
+
+    public function testInvalidQuery()
+    {
+        $this->expectException(InvalidQueryException::class);
+
+        $this->builder
+            ->where('id = 5')
+            ->toSQL();
+    }
+
+    public function testInvalidQueryBis()
+    {
+        $this->expectException(InvalidQueryException::class);
+
+        $this->builder
+            ->set(['name' => 'John'])
+            ->where('id = 5')
+            ->toSQL();
     }
 }
