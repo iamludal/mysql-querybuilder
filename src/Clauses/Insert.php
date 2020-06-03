@@ -2,9 +2,8 @@
 
 namespace Ludal\QueryBuilder\Clauses;
 
-use InvalidArgumentException;
-use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use InvalidArgumentException;
 use Ludal\QueryBuilder\Utils;
 
 class Insert extends Clause
@@ -77,7 +76,7 @@ class Insert extends Clause
     public function validate()
     {
         $conditions = [
-            is_string($this->table) && mb_strlen($this->table) > 0,
+            is_string($this->table),
             count($this->columns) > 0,
             count($this->values) > 0,
         ];
