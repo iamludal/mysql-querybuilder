@@ -8,6 +8,7 @@ use Ludal\QueryBuilder\Clauses\Update;
 use Ludal\QueryBuilder\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Clauses\Delete;
 use stdClass;
 use PDO;
 
@@ -66,12 +67,27 @@ final class QueryBuilderTest extends TestCase
         $this->assertInstanceOf(Select::class, $select);
     }
 
-    public function testInsertReturnsInstanceOfSelect()
+    public function testInsertReturnsInstanceOfInsert()
     {
         $res = $this->builder
             ->insertInto('articles');
 
         $this->assertInstanceOf(Insert::class, $res);
+    }
+
+    public function testUpdateReturnsInstanceOfUpdate()
+    {
+        $update = $this->builder->update('users');
+
+        $this->assertInstanceOf(Update::class, $update);
+    }
+
+    public function testDeleteReturnsInstanceOfDelete()
+    {
+        $res = $this->builder
+            ->deleteFrom('articles');
+
+        $this->assertInstanceOf(Delete::class, $res);
     }
 
     public function testSetDefaultFetchMode()
@@ -95,12 +111,5 @@ final class QueryBuilderTest extends TestCase
 
         foreach ($results as $result)
             $this->assertIsObject($result);
-    }
-
-    public function testUpdateReturnsInstanceOfUpdate()
-    {
-        $update = $this->builder->update('users');
-
-        $this->assertInstanceOf(Update::class, $update);
     }
 }
