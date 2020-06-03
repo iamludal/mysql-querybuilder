@@ -80,7 +80,7 @@ final class InsertTest extends TestCase
 
         $res = self::$pdo->query('SELECT * FROM users')->fetchAll();
 
-        $this->assertEquals(1, count($res));
+        $this->assertCount(1, $res);
         $this->assertEquals('Bob', $res[0]['username']);
     }
 }

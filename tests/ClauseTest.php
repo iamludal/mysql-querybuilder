@@ -102,9 +102,7 @@ final class ClauseTest extends TestCase
             ->where('id < 5')
             ->fetchAll(PDO::FETCH_CLASS, stdClass::class);
 
-        $length = count($res);
-
-        $this->assertEquals(5, $length);
+        $this->assertCount(5, $res);
 
         foreach ($res as $index => $element) {
             $this->assertInstanceOf(stdClass::class, $element);
@@ -204,26 +202,26 @@ final class ClauseTest extends TestCase
 
     public function testSetParamWithoutType()
     {
-        $result = $this->select
-            ->setColumns()
+        $id = $this->select
+            ->setColumns('id')
             ->from('users')
             ->where('id = :id')
             ->setParam(':id', 5)
-            ->fetch();
+            ->fetch(PDO::FETCH_COLUMN);
 
-        $this->assertEquals(5, $result['id']);
+        $this->assertEquals(5, $id);
     }
 
     public function testSetParamWithType()
     {
-        $result = $this->select
-            ->setColumns()
+        $name = $this->select
+            ->setColumns('name')
             ->from('users')
             ->where('name = :name')
             ->setParam(':name', 'User 3', PDO::PARAM_STR)
-            ->fetch();
+            ->fetch(PDO::FETCH_COLUMN);
 
-        $this->assertEquals('User 3', $result['name']);
+        $this->assertEquals('User 3', $name);
     }
 
     public function testSetDefaultFetchMode()
@@ -312,17 +310,17 @@ final class ClauseTest extends TestCase
     public function testSetParams()
     {
         $results = $this->select
-            ->setColumns()
+            ->setColumns('name')
             ->from('users')
             ->where('id = :id')
             ->orWhere('name = :name')
             ->setParams([':name' => 'User 0', ':id' => 1])
-            ->fetchAll();
+            ->fetchAll(PDO::FETCH_COLUMN);
 
-        $this->assertEquals(2, count($results));
+        $this->assertCount(2, $results);
 
-        $this->assertContains($results[0]->name, ['User 0', 'User 1']);
-        $this->assertContains($results[1]->name, ['User 0', 'User 1']);
+        $this->assertContains($results[0], ['User 0', 'User 1']);
+        $this->assertContains($results[1], ['User 0', 'User 1']);
     }
 
     public function testSetParamsWithSequentialArrayThrowsException()
