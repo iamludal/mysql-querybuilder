@@ -23,7 +23,7 @@ final class SelectTest extends TestCase
 
     public static function getBuilderWithPDO()
     {
-        return new Select($this->pdo);
+        return new Select(self::$pdo);
     }
 
     public static function setUpBeforeClass(): void
