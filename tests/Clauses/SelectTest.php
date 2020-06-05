@@ -16,15 +16,10 @@ final class SelectTest extends TestCase
      */
     private static $pdo;
 
-    public static function getBuilder()
-    {
-        return new Select();
-    }
-
-    public static function getBuilderWithPDO()
-    {
-        return new Select(self::$pdo);
-    }
+    /**
+     * @var Select
+     */
+    private $builder;
 
     public static function setUpBeforeClass(): void
     {
@@ -35,6 +30,11 @@ final class SelectTest extends TestCase
             `name` TEXT,
             `address` TEXT,
             `city` TEXT)');
+    }
+
+    public function setUp(): void
+    {
+        $this->builder = new Select(self::$pdo);
     }
 
     public function badConstructorArguments()
@@ -79,7 +79,7 @@ final class SelectTest extends TestCase
 
     public function testSelectMethodReturnsTheInstance()
     {
-        $select = $this->getBuilder()->setColumns();
+        $select = $this->builder->setColumns();
 
         $this->assertInstanceOf(Select::class, $select);
     }
@@ -87,10 +87,10 @@ final class SelectTest extends TestCase
     public function testInvalidQueries()
     {
         $invalidQueries = [
-            $this->getBuilder(),
-            $this->getBuilder()->setColumns(),
-            $this->getBuilder()->from('users'),
-            $this->getBuilder()->where('id = 5')
+            (new Select()),
+            (new Select())->setColumns(),
+            (new Select())->from('users'),
+            (new Select())->where('id = 5')
         ];
 
         $n = count($invalidQueries);
@@ -109,7 +109,7 @@ final class SelectTest extends TestCase
 
     public function testSimpleQuery()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('users')
             ->toSQL();
@@ -119,7 +119,7 @@ final class SelectTest extends TestCase
 
     public function testSimpleQueryWithColumnNames()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns('name', ['city' => 'c', 'age' => 'a'])
             ->from('users')
             ->toSQL();
@@ -144,14 +144,14 @@ final class SelectTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->getBuilder()
+        $this->builder
             ->setColumns()
             ->from($invalidName);
     }
 
     public function testQueryWithWhereClause()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('users')
             ->where('id = 5')
@@ -162,7 +162,7 @@ final class SelectTest extends TestCase
 
     public function testQueryWithMultipleWhereClauses()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('users')
             ->where('id = 5', 'age < 18')
@@ -175,7 +175,7 @@ final class SelectTest extends TestCase
 
     public function testEmptyWhereIsLikeNotHavingIt()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('users')
             ->where()
@@ -186,7 +186,7 @@ final class SelectTest extends TestCase
 
     public function testWhereOrWhere()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('cars')
             ->where('doors = 5', 'year < 2000')
@@ -201,7 +201,7 @@ final class SelectTest extends TestCase
 
     public function testOrderBy()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('cars')
             ->orderBy('brand', 'desc')
@@ -215,7 +215,7 @@ final class SelectTest extends TestCase
 
     public function testLimit()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('cars')
             ->limit(10)
@@ -241,7 +241,7 @@ final class SelectTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->getBuilder()
+        $this->builder
             ->setColumns()
             ->from('cars')
             ->limit($invalidLimit);
@@ -249,13 +249,13 @@ final class SelectTest extends TestCase
 
     public function testLimitAndOffset()
     {
-        $sql1 = $this->getBuilder()
+        $sql1 = (new Select())
             ->setColumns()
             ->from('cars')
             ->limit(5, 10)
             ->toSQL();
 
-        $sql2 = $this->getBuilder()
+        $sql2 = (new Select())
             ->setColumns()
             ->from('cars')
             ->limit(10)
@@ -270,7 +270,7 @@ final class SelectTest extends TestCase
 
     public function testOffset()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns()
             ->from('cars')
             ->offset(5)
@@ -296,7 +296,7 @@ final class SelectTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->getBuilder()
+        $this->builder
             ->setColumns()
             ->from('cars')
             ->offset($invalidOffset);
@@ -304,7 +304,7 @@ final class SelectTest extends TestCase
 
     public function testSelectAsSequential()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns(['name', 'age'])
             ->from('users')
             ->toSQL();
@@ -314,7 +314,7 @@ final class SelectTest extends TestCase
 
     public function testComplexQuery()
     {
-        $sql = $this->getBuilder()
+        $sql = $this->builder
             ->setColumns(['name' => 'n'], 'age')
             ->from('users')
             ->where('id < :id', 'age < 20')
