@@ -7,7 +7,7 @@
 
 This is a PHP query builder for simple SQL queries. It allows you to write SQL
 queries without having to write them as strings or use heredoc, which often
-breaks the cleanliness.
+breaks the code's cleanliness.
 
 > 💡 Made with ❤️ in 🇫🇷
 
@@ -36,7 +36,7 @@ queries directly.
 > $builder = new QueryBuilder($pdo);
 > ```
 
-From this instance, build your query:
+From this instance, you can now build your query:
 
 ```php
 $select = $builder
@@ -49,7 +49,7 @@ $update = $builder
   ->where('id = 6');
 ```
 
-From there, you can either:
+Then, you can either:
 - Convert your query into a SQL string
 - Execute the query
 - Fetch the results of your query
@@ -59,7 +59,7 @@ $select->toSQL(); // returns "SELECT * FROM users"
 
 $select->fetchAll(); // returns the rows fetched from the db
 
-$update->execute(); // execute the UPDATE query
+$update->execute(); // executes the UPDATE query
 ```
 
 
