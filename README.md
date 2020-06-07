@@ -80,4 +80,4 @@ a complete documentation of this library.
 ## 🙏 Acknowledgement
 
 - [Vincent Aranega](https://github.com/aranega) for tips and tricks about the
-code organisation
+code organization
