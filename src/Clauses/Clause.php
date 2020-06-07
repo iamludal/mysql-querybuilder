@@ -137,7 +137,7 @@ abstract class Clause
      * not been executed yet, it will execute it automatically
      * 
      * @return int the row count
-     * @throws BadMethodCallException if there is no statement
+     * @throws BadMethodCallException if there is no PDO instance
      */
     public function rowCount()
     {
