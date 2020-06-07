@@ -24,6 +24,11 @@ final class QueryBuilderTest extends TestCase
      */
     private $builder;
 
+    /**
+     * @var QueryBuilder
+     */
+    private $builderWithPDO;
+
     public static function setUpBeforeClass(): void
     {
         self::$pdo = new PDO('sqlite::memory:');
@@ -111,5 +116,21 @@ final class QueryBuilderTest extends TestCase
 
         foreach ($results as $result)
             $this->assertIsObject($result);
+    }
+
+    public function testOneCanRunMultipleQueriesFromTheSameInstance()
+    {
+        $this->builderWithPDO
+            ->insertInto('users')
+            ->values(['name' => 'John', 'id' => 20])
+            ->execute();
+
+        $name = $this->builderWithPDO
+            ->select('name')
+            ->from('users')
+            ->where('id = 20')
+            ->fetch(PDO::FETCH_COLUMN);
+
+        $this->assertEquals('John', $name);
     }
 }
