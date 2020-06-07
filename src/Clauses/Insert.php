@@ -100,6 +100,9 @@ class Insert extends Clause
 
     public function execute(...$args)
     {
+        if (is_null($this->pdo))
+            $this->createStatement();
+
         $sql = $this->toSQL();
         $this->statement = $this->pdo->prepare($sql);
 
