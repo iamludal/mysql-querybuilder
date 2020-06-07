@@ -5,7 +5,11 @@
 
 ## ℹ️ Presentation
 
-This is a PHP query builder for simple SQL queries.
+This is a PHP query builder for simple SQL queries. It allows you to write SQL
+queries without having to write them as strings or use heredoc, which often
+breaks the cleanliness.
+
+> 💡 Made with ❤️ in 🇫🇷
 
 
 ## 😃 Emojis legend
@@ -16,87 +20,64 @@ for commit messages (thanks to [gitmoji-cli](https://github.com/carloscuesta/git
 
 ## 📘 Usage
 
-First, initialize a new instance of the QueryBuilder class.
+### 🏁 Getting started
+
+First, initialize a new instance of `QueryBuilder`.
 
 ```php
 $builder = new QueryBuilder();
 ```
 
-> Note that you can pass a PDO instance as a parameter to execute queries directly
+> 💡 You can also pass a PDO instance as a parameter to execute and fetch
+queries directly.
+>
 > ```php
 > $pdo = new PDO($dsn, $login, $password);
 > $builder = new QueryBuilder($pdo);
 > ```
 
-Then, you can either convert your query into a SQL string, or execute/fetch it directly
+From this instance, build your query:
 
 ```php
-$query = $builder
+$select = $builder
   ->select()
-  ->from('users')
-  ->toSQL();
-// $query = "SELECT * FROM users"
-
-$results = $builder
-  ->select()
-  ->from('users')
-  ->fetchAll();
-// Return the rows fetched from the db
-```
-
-> You can specify the fetch mode as you would do it with `PDO`
-> ```php
-> $builder
->   ->select()
->   ->from('users')
->   ->fetchAll(PDO::FETCH_CLASS, SomeClass::class)
-> ```
->
-> By default : `PDO::FETCH_OBJ`
-
-
-### 1. `SELECT` query
-
-Simple queries
-```php
-$builder
-  ->select() // default : *
-  ->from('users')
-
-$builder
-  ->select('name', 'age')
   ->from('users');
-  
-$builder
-  ->select(['name', 'age'])
-  ->from('users');
+
+$update = $builder
+  ->update('users')
+  ->set(['name' => 'John'])
+  ->where('id = 6');
 ```
 
-Complex query
+From there, you can either:
+- Convert your query into a SQL string
+- Execute the query
+- Fetch the results of your query
+
 ```php
-$builder
- ->select('name')
- ->from('users', 'u') // specify an alias for the table
- ->where('id < :id', 'age > 18') // where conditions are joined with 'AND'
- ->orWhere('name = "George"')
- ->orderBy('age', 'asc') // 'asc' or 'desc', default: 'asc'
- ->orderBy('name', 'desc') // order by age asc, and for same age, order by name desc
- ->limit(5)
- ->offset(2)
- ->setParam(':id', 5, PDO::PARAM_INT) // or let the class guess the corresponding PDO type by omitting the last parameter
- ->fetchAll(PDO::FETCH_ASSOC);
+$select->toSQL(); // returns "SELECT * FROM users"
+
+$select->fetchAll(); // returns the rows fetched from the db
+
+$update->execute(); // execute the UPDATE query
 ```
 
-### 2. `INSERT` query
 
-### 3. `UPDATE` query
+### ✅ Supported clauses
 
-### 4. `DELETE` query
-
-
-
-
+- `SELECT`
+- `UPDATE`
+- `DELETE FROM`
+- `INSERT INTO`
 
 
+## 📖 Docs
+
+Please see [this link](https://github.com/iamludal/PHP-QueryBuilder/wiki) for 
+a complete documentation of this library.
 
 
+## 🙏 Acknowledgement
+
+- [Vincent Aranega](https://github.com/aranega) for tips and tricks about the
+code organisation
