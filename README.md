@@ -84,3 +84,4 @@ a complete documentation of this library.
 
 - [Vincent Aranega](https://github.com/aranega) for tips and tricks about the
 code organization
+- [shields.io](https://shields.io) for the badges
