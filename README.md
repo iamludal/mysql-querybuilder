@@ -1,6 +1,9 @@
 # 🔧 PHP QueryBuilder
 
 ![Build Status](https://travis-ci.org/iamludal/PHP-QueryBuilder.svg?branch=master)
+![Version](https://img.shields.io/github/v/tag/iamludal/PHP-QueryBuilder?label=version)
+![PHP Version](https://img.shields.io/packagist/php-v/ludal/sql-querybuilder?color=blueviolet)
+![License](https://img.shields.io/packagist/l/ludal/sql-querybuilder?color=orange)
 
 
 ## ℹ️ Presentation
