@@ -6,8 +6,8 @@ use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Update;
-use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\Delete;
+use InvalidArgumentException;
 use PDO;
 
 class QueryBuilder
@@ -21,11 +21,8 @@ class QueryBuilder
      * @param PDO $pdo (optional) a PDO instance
      * @throws InvalidArgumentException if $pdo is not a PDO instance
      */
-    public function __construct($pdo = null)
+    public function __construct(PDO $pdo = null)
     {
-        if (!is_null($pdo) && !($pdo instanceof PDO))
-            throw new InvalidArgumentException('Argument should be a PDO instance');
-
         $this->pdo = $pdo;
     }
 

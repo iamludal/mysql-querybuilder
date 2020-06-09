@@ -62,12 +62,12 @@ class Insert extends Clause
         $this->columns = array_keys($row);
         $this->values = array_values($row);
 
-        $i = 1;
+        $count = 1;
 
         foreach ($row as $value) {
-            $key = ":v{$i}";
+            $key = ":v{$count}";
             $this->params[$key] = $value;
-            $i++;
+            $count++;
         }
 
         return $this;
@@ -100,7 +100,7 @@ class Insert extends Clause
 
     public function execute(...$args)
     {
-        if (is_null($this->pdo))
+        if ($this->pdo === null)
             $this->createStatement();
 
         $sql = $this->toSQL();

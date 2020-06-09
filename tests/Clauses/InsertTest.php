@@ -66,7 +66,7 @@ final class InsertTest extends TestCase
     {
         $this->expectException(InvalidQueryException::class);
 
-        $sql = $this->getBuilder()
+        $this->getBuilder()
             ->values(['username' => 'Billy', 'id' => 5])
             ->toSQL();
     }

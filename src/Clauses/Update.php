@@ -22,7 +22,7 @@ class Update extends Clause
     /**
      * @var int keeps track of the number of values to set (:v1, :v2...)
      */
-    private $i = 1;
+    private $count = 1;
 
     /**
      * @var string[] keeps track of the values: ["col1 = :v1", ...]
@@ -86,11 +86,11 @@ class Update extends Clause
         if (!is_string($column))
             throw new InvalidArgumentException('Column name should be a string');
 
-        $param = ":v{$this->i}";
+        $param = ":v{$this->count}";
         $this->params[] = "$column = $param";
         $this->values[$param] = $value;
 
-        $this->i++;
+        $this->count++;
 
         return $this;
     }

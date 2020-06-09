@@ -93,7 +93,7 @@ final class SelectTest extends TestCase
             (new Select())->where('id = 5')
         ];
 
-        $n = count($invalidQueries);
+        $count = count($invalidQueries);
         $count = 0;
 
         foreach ($invalidQueries as $query) {
@@ -104,7 +104,7 @@ final class SelectTest extends TestCase
             }
         }
 
-        $this->assertEquals($n, $count);
+        $this->assertEquals($count, $count);
     }
 
     public function testSimpleQuery()

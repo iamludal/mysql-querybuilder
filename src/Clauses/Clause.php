@@ -35,11 +35,8 @@ abstract class Clause
      * 
      * @param PDO $pdo (optional) a PDO instance to fetch/execute the clause
      */
-    public function __construct($pdo = null)
+    public function __construct(PDO $pdo = null)
     {
-        if ($pdo !== null && !($pdo instanceof PDO))
-            throw new InvalidArgumentException('Constructor parameter should be a PDO instance');
-
         $this->pdo = $pdo;
     }
 
