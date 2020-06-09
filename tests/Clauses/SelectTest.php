@@ -6,6 +6,7 @@ use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use Ludal\QueryBuilder\Clauses\Select;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
+use TypeError;
 use stdClass;
 use PDO;
 
@@ -55,7 +56,7 @@ final class SelectTest extends TestCase
      */
     public function testInvalidConstructorArguments($badArgument)
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
 
         new Select($badArgument);
     }

@@ -6,9 +6,9 @@ use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Update;
 use Ludal\QueryBuilder\QueryBuilder;
-use PHPUnit\Framework\TestCase;
-use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\Delete;
+use PHPUnit\Framework\TestCase;
+use TypeError;
 use stdClass;
 use PDO;
 
@@ -62,7 +62,7 @@ final class QueryBuilderTest extends TestCase
      */
     public function testInvalidConstructorArgumentsThrowsException($invalidArgument)
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new QueryBuilder($invalidArgument);
     }
 
