@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/packagist/l/ludal/sql-querybuilder?color=orange)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8ab804e60c38445a8e184c264c06cd45)](https://www.codacy.com/manual/iamludal/PHP-QueryBuilder?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=iamludal/PHP-QueryBuilder&amp;utm_campaign=Badge_Grade)
 
+
 ## ℹ️ Presentation
 
 This is a PHP query builder for simple SQL queries. It allows you to write SQL
@@ -14,10 +15,12 @@ breaks the code's cleanliness.
 
 > 💡 Made with ❤️ in 🇫🇷
 
+
 ## 😃 Emojis legend
 
 This repo uses [gitmoji](https://github.com/carloscuesta/gitmoji)'s conventions
 for commit messages (thanks to [gitmoji-cli](https://github.com/carloscuesta/gitmoji-cli))
+
 
 ## 📘 Usage
 
@@ -30,7 +33,7 @@ $builder = new QueryBuilder();
 ```
 
 > 💡 You can also pass a PDO instance as a parameter to execute and fetch
-queries directly.
+> queries directly.
 > ```php
 > $pdo = new PDO($dsn, $login, $password);
 > $builder = new QueryBuilder($pdo);
@@ -62,6 +65,7 @@ $select->fetchAll(); // returns the rows fetched from the db
 $update->execute(); // executes the UPDATE query
 ```
 
+
 ### ✅ Supported clauses
 
 - `SELECT`
@@ -69,10 +73,12 @@ $update->execute(); // executes the UPDATE query
 - `DELETE FROM`
 - `INSERT INTO`
 
+
 ## 📖 Docs
 
 Please see [this link](https://github.com/iamludal/PHP-QueryBuilder/wiki) for 
 a complete documentation of this library.
+
 
 ## 🙏 Acknowledgements
 
