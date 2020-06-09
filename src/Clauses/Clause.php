@@ -37,7 +37,7 @@ abstract class Clause
      */
     public function __construct($pdo = null)
     {
-        if (!is_null($pdo) && !($pdo instanceof PDO))
+        if ($pdo !== null && !($pdo instanceof PDO))
             throw new InvalidArgumentException('Constructor parameter should be a PDO instance');
 
         $this->pdo = $pdo;
@@ -67,7 +67,7 @@ abstract class Clause
      */
     public function setFetchMode(...$args)
     {
-        if (is_null($this->statement))
+        if ($this->statement === null)
             $this->createStatement();
 
         $this->statement->setFetchMode(...$args);
@@ -101,10 +101,10 @@ abstract class Clause
     {
         if (!is_string($param))
             throw new InvalidArgumentException('Param name should be a string');
-        elseif (is_null($this->statement))
+        elseif ($this->statement === null)
             $this->createStatement();
 
-        $PDOType = is_null($type) ? Utils::getPDOType($value) : $type;
+        $PDOType = ($type === null) ? Utils::getPDOType($value) : $type;
 
         $this->statement->bindParam($param, $value, $PDOType);
 
@@ -131,6 +131,25 @@ abstract class Clause
     }
 
     /**
+     * To bind a column to a specific typs. Works exactly the same as the
+     * PDOStatement::bindColumn method
+     * 
+     * @param mixed[] ...$args the args for the PDO bindColumn method
+     * @return $this
+     * @throws PDOException if there is a PDO exception
+     * @throws BadMethodCallException if there is no PDO instance
+     */
+    public function bindColumn(...$args)
+    {
+        if ($this->statement === null)
+            $this->createStatement();
+
+        $this->statement->bindColumn(...$args);
+
+        return $this;
+    }
+
+    /**
      * Return the number of rows affected by the execution of the query.
      * 
      * You can call this method directly on the builder : if the query has
@@ -152,9 +171,9 @@ abstract class Clause
      * 
      * @throws BadMethodCallException if there is no PDO instance
      */
-    public function createStatement()
+    protected function createStatement()
     {
-        if (is_null($this->pdo))
+        if ($this->pdo === null)
             throw new BadMethodCallException('No PDO instance specified');
 
         $sql = $this->toSQL();
@@ -175,9 +194,9 @@ abstract class Clause
      */
     public function execute(...$args)
     {
-        if (is_null($this->pdo))
+        if ($this->pdo === null)
             throw new BadMethodCallException('Cannot execute without a PDO instance');
-        elseif (is_null($this->statement))
+        elseif ($this->statement === null)
             $this->createStatement();
 
         $this->alreadyExecuted = true;
