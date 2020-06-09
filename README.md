@@ -74,7 +74,7 @@ $update->execute(); // executes the UPDATE query
 Please see [this link](https://github.com/iamludal/PHP-QueryBuilder/wiki) for 
 a complete documentation of this library.
 
-## 🙏 Acknowledgement
+## 🙏 Acknowledgements
 
 - [Vincent Aranega](https://github.com/aranega) for tips and tricks about the
 code organization
