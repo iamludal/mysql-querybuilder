@@ -131,17 +131,19 @@ abstract class Clause
      * To bind a column to a specific typs. Works exactly the same as the
      * PDOStatement::bindColumn method
      * 
-     * @param mixed[] ...$args the args for the PDO bindColumn method
+     * @param string $column the column to bind
+     * @param mixed $var the variable that will receive the value
+     * @param mixed[] ...$args other args for the PDO bindColumn method
      * @return $this
      * @throws PDOException if there is a PDO exception
      * @throws BadMethodCallException if there is no PDO instance
      */
-    public function bindColumn(...$args)
+    public function bindColumn($column, &$var, ...$args)
     {
         if ($this->statement === null)
             $this->createStatement();
 
-        $this->statement->bindColumn(...$args);
+        $this->statement->bindColumn($column, $var, ...$args);
 
         return $this;
     }

@@ -161,7 +161,9 @@ class Update extends Clause
     public function execute(...$args)
     {
         $sql = $this->toSQL();
-        $this->statement = $this->pdo->prepare($sql);
+
+        if ($this->statement === null)
+            $this->createStatement();
 
         foreach ($this->values as $key => $value) {
             $type = Utils::getPDOType($value);
