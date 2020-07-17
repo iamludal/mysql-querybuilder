@@ -6,6 +6,9 @@
 ![License](https://img.shields.io/packagist/l/ludal/sql-querybuilder?color=orange)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8ab804e60c38445a8e184c264c06cd45)](https://www.codacy.com/manual/iamludal/PHP-QueryBuilder?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=iamludal/PHP-QueryBuilder&amp;utm_campaign=Badge_Grade)
 
+```
+composer require ludal/sql-querybuilder
+```
 
 ## ℹ️ Presentation
 
