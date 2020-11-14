@@ -1,5 +1,5 @@
 {
-    "name": "ludal/sql-querybuilder",
+    "name": "ludal/mysql-querybuilder",
     "description": "A simple PHP query builder for SQL queries",
     "type": "library",
     "require-dev": {
