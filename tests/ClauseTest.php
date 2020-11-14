@@ -224,6 +224,25 @@ final class ClauseTest extends TestCase
         $this->assertEquals('User 3', $name);
     }
 
+    public function testSetParamsUsingCompact()
+    {
+        $name = 'User 3';
+        $city = 'City 4';
+
+        $results = $this->select
+            ->setColumns('name', 'city')
+            ->from('users')
+            ->where('name = :name')
+            ->orWhere('city = :city')
+            ->orderBy('id')
+            ->setParams(compact('name', 'city'))
+            ->fetchAll(PDO::FETCH_OBJ);
+
+        $this->assertEquals(2, count($results));
+        $this->assertEquals($name, $results[0]->name);
+        $this->assertEquals($city, $results[1]->city);
+    }
+
     public function testSetDefaultFetchMode()
     {
         $result = (new Select(self::$pdo))
