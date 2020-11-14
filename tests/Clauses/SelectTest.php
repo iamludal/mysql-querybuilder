@@ -1,6 +1,6 @@
 <?php
 
-namespace Ludal\QueryBuilder\Tests;
+namespace Ludal\QueryBuilder\Tests\Clauses;
 
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use Ludal\QueryBuilder\Clauses\Select;
