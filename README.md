@@ -25,7 +25,7 @@ own risk**.
 
 ## 📘 Usage
 
-### 🏁 Getting started
+### Getting started
 
 First, initialize a new instance of `QueryBuilder`.
 
@@ -45,7 +45,8 @@ From this instance, you can now build your query:
 ```php
 $select = $builder
   ->select()
-  ->from('users');
+  ->from('users')
+  ->where('name = :name');
 
 $update = $builder
   ->update('users')
@@ -54,31 +55,85 @@ $update = $builder
 ```
 
 Then, you can either:
-- Convert your query into a SQL string
-- Execute the query
-- Fetch the results of your query
+- Convert your query into a SQL string : `toSQL()`
+- Bind parameters: `setParam('name', 'John')`, `setParams(['name' => 'John'])`...
+- Execute the query : `execute()`, `execute(['John'])`...
+- Fetch the results of your query : `fetch()`, `fetchAll()`, `fetch(PDO::FETCH_COLUMN)`...
+- Get the rowCount : `rowCount()`
+- Get the PDO statement corresponding to your query : `getStatement()`
+- And more: see docs for a full reference
 
 ```php
 $select->toSQL(); // returns "SELECT * FROM users"
 
 $select->fetchAll(); // returns the rows fetched from the db
 
+$select->getStatement(); // get the PDO statement, useful for handling errors
+
 $update->execute(); // executes the UPDATE query
 ```
 
 
-### ✅ Supported clauses
+### Supported clauses
 
-- `SELECT`
-- `UPDATE`
-- `DELETE FROM`
-- `INSERT INTO`
+- [x] `SELECT`
+- [x] `UPDATE`
+- [x] `DELETE FROM`
+- [x] `INSERT INTO`
+- [ ] `RETURNING`
+
+
+### Code samples
+
+> ⚠️ For clarity reasons, these examples will use the same instance of
+`QueryBuilder`. It is actually recommended that you create a new one for each
+of your requests in order to prevent unexpected behaviours.
+
+```php
+$pdo = new PDO(...);
+$qb = new QueryBuilder($pdo);
+
+QueryBuilder::setDefaultFetchMode(PDO::FETCH_ASSOC);
+
+// SELECT
+$res = $qb
+  ->select()
+  ->from('users')
+  ->where('id < 4', 'name = :name')
+  ->orWhere('age < 12')
+  ->orderBy('id', 'desc')
+  ->limit(2)
+  ->offset(1)
+  ->fetchAll();
+
+// INSERT
+$insert = $qb
+  ->insertInto('articles')
+  ->values(['title' => 'Lorem ipsum', 'content' => 'Some content'])
+  ->getStatement(); 
+
+$insert->execute();
+$insert->errorCode(); // or any other PDOStatement method
+
+// UPDATE
+$updated = $qb
+  ->update('connections')
+  ->set(['exp' => true, 'date' => date('Y-m-d')])
+  ->execute();
+
+// DELETE
+$rowCount = $qb
+  ->deleteFrom('users')
+  ->where("id = 5")
+  ->orWhere("name = :name")
+  ->setParam(':name', 'John')
+  ->rowCount(); // will execute, and return the rowCount
+```
 
 
 ## 📖 Docs
 
-Please see [this link](https://github.com/iamludal/PHP-QueryBuilder/wiki) for 
-a complete documentation of this library.
+[Wiki](https://github.com/iamludal/PHP-QueryBuilder/wiki) under construction. 🚧
 
 
 ## 🙏 Acknowledgements
