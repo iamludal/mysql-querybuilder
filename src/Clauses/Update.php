@@ -8,7 +8,6 @@ use Ludal\QueryBuilder\Utils;
 
 class Update extends Clause
 {
-
     /**
      * @var string
      */
@@ -20,19 +19,9 @@ class Update extends Clause
     private $conditions = [];
 
     /**
-     * @var int keeps track of the number of values to set (:v1, :v2...)
+     * @var string[] the params, in the form : "id = 4", "age = 20"...
      */
-    private $count = 1;
-
-    /**
-     * @var string[] keeps track of the values: ["col1 = :v1", ...]
-     */
-    private $values = [];
-
-    /**
-     * @var mixed[] params to set : [$param => $value, ...]
-     */
-    private $params = [];
+    private $updateParams = [];
 
     /**
      * Set the table to update
@@ -56,7 +45,7 @@ class Update extends Clause
      * 
      * @param mixed[]|string ...$values an associative array of the form
      * [$col => $val, ...] or a string, that is directly the value to set,
-     * for instace: "id = 5"
+     * for instance: "id = 5"
      * @return $this
      * @throws InvalidArgumentException if $values is neither an associative
      * array nor a string
@@ -65,7 +54,7 @@ class Update extends Clause
     {
         foreach ($values as $value)
             if (is_string($value))
-                $this->params[] = $value;
+                $this->updateParams[] = $value;
             elseif (is_array($value))
                 foreach ($value as $key => $val)
                     $this->setValue($key, $val);
@@ -86,11 +75,8 @@ class Update extends Clause
         if (!is_string($column))
             throw new InvalidArgumentException('Column name should be a string');
 
-        $param = ":v{$this->count}";
-        $this->params[] = "$column = $param";
-        $this->values[$param] = $value;
-
-        $this->count++;
+        $this->updateParams[] = "$column = :$column";
+        $this->params[":$column"] = $value;
 
         return $this;
     }
@@ -135,7 +121,8 @@ class Update extends Clause
     public function validate()
     {
         $conditions = [
-            is_string($this->table)
+            is_string($this->table),
+            count($this->params + $this->updateParams) > 0,
         ];
 
         if (in_array(false, $conditions))
@@ -148,7 +135,7 @@ class Update extends Clause
 
         $sql = "UPDATE {$this->table} SET ";
 
-        $sql .= implode(', ', $this->params);
+        $sql .= implode(', ', $this->updateParams);
 
         if ($this->conditions) {
             $conditions = implode(') OR (', $this->conditions);
@@ -156,20 +143,5 @@ class Update extends Clause
         }
 
         return $sql;
-    }
-
-    public function execute(...$args)
-    {
-        $sql = $this->toSQL();
-
-        if ($this->statement === null)
-            $this->createStatement();
-
-        foreach ($this->values as $key => $value) {
-            $type = Utils::getPDOType($value);
-            $this->statement->bindValue($key, $value, $type);
-        }
-
-        return $this->statement->execute();
     }
 }

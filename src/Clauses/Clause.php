@@ -31,6 +31,11 @@ abstract class Clause
     private static $fetchArgs = [];
 
     /**
+     * PDO params to be binded
+     */
+    protected $params = [];
+
+    /**
      * Create a new clause
      * 
      * @param PDO $pdo (optional) a PDO instance to fetch/execute the clause
@@ -39,7 +44,6 @@ abstract class Clause
     {
         $this->pdo = $pdo;
     }
-
 
     /**
      * Validate the query
@@ -98,10 +102,10 @@ abstract class Clause
     {
         if (!is_string($param))
             throw new InvalidArgumentException('Param name should be a string');
-        elseif ($this->statement === null)
+        elseif (is_null($this->statement))
             $this->createStatement();
 
-        $PDOType = ($type === null) ? Utils::getPDOType($value) : $type;
+        $PDOType = is_null($type) ? Utils::getPDOType($value) : $type;
 
         $this->statement->bindParam($param, $value, $PDOType);
 
@@ -177,9 +181,23 @@ abstract class Clause
 
         $sql = $this->toSQL();
         $this->statement = $this->pdo->prepare($sql);
+        $this->setParams($this->params);
 
         if (self::$fetchArgs)
             $this->statement->setFetchMode(...self::$fetchArgs);
+    }
+
+    /**
+     * Get the current PDO statement. If it doesn't exist, null is returned.
+     * 
+     * @return PDOStatement the PDOStatement corresponding to the current query
+     */
+    public function getStatement()
+    {
+        if (!$this->statement)
+            $this->createStatement();
+
+        return $this->statement;
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Ludal\QueryBuilder\Clauses;
 
+use BadMethodCallException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use InvalidArgumentException;
-use Ludal\QueryBuilder\Utils;
 
 class Insert extends Clause
 {
@@ -12,21 +12,6 @@ class Insert extends Clause
      * @var string the table in which to insert values
      */
     private $table;
-
-    /**
-     * @var string[] the columns
-     */
-    private $columns = [];
-
-    /**
-     * @param mixed[] the values to insert
-     */
-    private $values = [];
-
-    /**
-     * @var mixed[] params to bind (PDO)
-     */
-    private $params = [];
 
     /**
      * Specify the table in which to insert values
@@ -59,16 +44,7 @@ class Insert extends Clause
         if (array_values($row) == $row)
             throw new InvalidArgumentException('Value should be an associative array');
 
-        $this->columns = array_keys($row);
-        $this->values = array_values($row);
-
-        $count = 1;
-
-        foreach ($row as $value) {
-            $key = ":v{$count}";
-            $this->params[$key] = $value;
-            $count++;
-        }
+        $this->params = $row;
 
         return $this;
     }
@@ -77,8 +53,7 @@ class Insert extends Clause
     {
         $conditions = [
             is_string($this->table),
-            count($this->columns) > 0,
-            count($this->values) > 0,
+            count($this->params) > 0,
         ];
 
         if (in_array(false, $conditions))
@@ -90,27 +65,15 @@ class Insert extends Clause
         $this->validate();
 
         $table = $this->table;
-        $columns = implode(', ', $this->columns);
-        $params = implode(', ', array_keys($this->params));
+        $cols = array_keys($this->params);
+        $columns = implode(', ', $cols);
+        $keys = array_map(function ($elt) {
+            return ":$elt";
+        }, $cols);
+        $params = implode(', ', $keys);
 
         $sql = "INSERT INTO $table ($columns) VALUES ($params)";
 
         return $sql;
-    }
-
-    public function execute(...$args)
-    {
-        if ($this->pdo === null)
-            $this->createStatement();
-
-        $sql = $this->toSQL();
-        $this->statement = $this->pdo->prepare($sql);
-
-        foreach ($this->params as $key => $value) {
-            $type = Utils::getPDOType($value);
-            $this->statement->bindValue($key, $value, $type);
-        }
-
-        return $this->statement->execute();
     }
 }

@@ -43,7 +43,7 @@ final class UpdateTest extends TestCase
             ->set(['name' => 'Ludal', 'age' => 20])
             ->toSQL();
 
-        $expected = 'UPDATE users SET name = :v1, age = :v2';
+        $expected = 'UPDATE users SET name = :name, age = :age';
 
         $this->assertEquals($expected, $sql);
     }
@@ -56,7 +56,7 @@ final class UpdateTest extends TestCase
             ->where('id = 8')
             ->toSQL();
 
-        $expected = 'UPDATE users SET name = :v1, age = :v2 WHERE (id = 8)';
+        $expected = 'UPDATE users SET name = :name, age = :age WHERE (id = 8)';
 
         $this->assertEquals($expected, $sql);
     }
@@ -68,7 +68,7 @@ final class UpdateTest extends TestCase
             ->set(['name' => 'Ludal', 'age' => 20], 'id = 20')
             ->toSQL();
 
-        $expected = 'UPDATE users SET name = :v1, age = :v2, id = 20';
+        $expected = 'UPDATE users SET name = :name, age = :age, id = 20';
 
         $this->assertEquals($expected, $sql);
     }
@@ -83,7 +83,7 @@ final class UpdateTest extends TestCase
             ->orWhere('color = "red"')
             ->toSQL();
 
-        $expected = 'UPDATE cars SET price = :v1 ';
+        $expected = 'UPDATE cars SET price = :price ';
         $expected .= 'WHERE (year < 2000 AND brand = "Peugeot") ';
         $expected .= 'OR (km > 100000) OR (color = "red")';
 

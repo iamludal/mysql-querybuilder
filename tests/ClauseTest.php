@@ -13,6 +13,7 @@ use BadMethodCallException;
 use stdClass;
 use Error;
 use PDO;
+use PDOStatement;
 
 final class ClauseTest extends TestCase
 {
@@ -40,7 +41,7 @@ final class ClauseTest extends TestCase
     {
         self::$pdo = new PDO('sqlite::memory:');
 
-        self::$pdo->exec('CREATE TABLE users (id int, name text, city text)');
+        self::$pdo->exec('CREATE TABLE users (id int unique, name text, city text)');
 
         for ($i = 0; $i < 10; $i++)
             self::$pdo->exec("INSERT INTO users VALUES ($i, 'User $i', 'City $i')");
@@ -48,7 +49,7 @@ final class ClauseTest extends TestCase
 
     public function setUp(): void
     {
-        // clear db
+        // clear dbexecute
         self::$pdo->exec('DELETE FROM users');
 
         // fill db
@@ -309,7 +310,7 @@ final class ClauseTest extends TestCase
     {
         $count = $this->update
             ->setTable('users')
-            ->set('id = id + 1')
+            ->set('id = id + 10')
             ->where('id > 5')
             ->rowCount();
 
@@ -352,5 +353,28 @@ final class ClauseTest extends TestCase
             ->where('id = :id')
             ->orWhere('name = :name')
             ->setParams([1, 'User 0']);
+    }
+
+    public function testGetStatementReturnsPDOStatement()
+    {
+        $stmt = $this->select
+            ->setColumns()
+            ->from('users')
+            ->getStatement();
+
+        $this->assertInstanceOf(PDOStatement::class, $stmt);
+    }
+
+    public function testErrorCodeCorrespondsToTheStatement()
+    {
+        $stmt = $this->insert
+            ->into('users')
+            ->values(['id' => 1])
+            ->getStatement();
+
+        $stmt->execute();
+        $errorCode = $stmt->errorCode();
+
+        $this->assertEquals(1, preg_match('/^23/', $errorCode));
     }
 }
