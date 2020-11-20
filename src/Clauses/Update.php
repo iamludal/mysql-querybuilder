@@ -75,8 +75,8 @@ class Update extends Clause
         if (!is_string($column))
             throw new InvalidArgumentException('Column name should be a string');
 
-        $this->updateParams[] = "$column = :$column";
-        $this->params[":$column"] = $value;
+        $this->updateParams[] = "$column = :_$column";
+        $this->params[$column] = $value;
 
         return $this;
     }

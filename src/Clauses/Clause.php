@@ -181,6 +181,13 @@ abstract class Clause
 
         $sql = $this->toSQL();
         $this->statement = $this->pdo->prepare($sql);
+
+        // map each "key" to ":_key"
+        foreach ($this->params as $key => $value) {
+            $this->params[":_$key"] = $value;
+            unset($this->params[$key]);
+        }
+
         $this->setParams($this->params);
 
         if (self::$fetchArgs)

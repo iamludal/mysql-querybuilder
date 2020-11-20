@@ -44,7 +44,8 @@ class Insert extends Clause
         if (array_values($row) == $row)
             throw new InvalidArgumentException('Value should be an associative array');
 
-        $this->params = $row;
+        foreach ($row as $key => $value)
+            $this->params[$key] = $value;
 
         return $this;
     }
@@ -65,12 +66,11 @@ class Insert extends Clause
         $this->validate();
 
         $table = $this->table;
-        $cols = array_keys($this->params);
-        $columns = implode(', ', $cols);
-        $keys = array_map(function ($elt) {
-            return ":$elt";
-        }, $cols);
-        $params = implode(', ', $keys);
+        $keys = array_keys($this->params);
+        $columns = implode(', ', $keys);
+        $params = implode(', ', array_map(function ($k) {
+            return ":_$k";
+        }, $keys));
 
         $sql = "INSERT INTO $table ($columns) VALUES ($params)";
 

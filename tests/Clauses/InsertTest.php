@@ -57,7 +57,7 @@ final class InsertTest extends TestCase
             ->values(['username' => 'Billy', 'id' => 5])
             ->toSQL();
 
-        $expected = 'INSERT INTO users (username, id) VALUES (:username, :id)';
+        $expected = 'INSERT INTO users (username, id) VALUES (:_username, :_id)';
 
         $this->assertEquals($expected, $sql);
     }
