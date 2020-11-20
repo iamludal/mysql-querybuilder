@@ -80,7 +80,6 @@ $update->execute(); // executes the UPDATE query
 - [x] `UPDATE`
 - [x] `DELETE FROM`
 - [x] `INSERT INTO`
-- [ ] `RETURNING`
 
 
 ### Code samples
