@@ -95,29 +95,6 @@ final class QueryBuilderTest extends TestCase
         $this->assertInstanceOf(Delete::class, $res);
     }
 
-    public function testSetDefaultFetchMode()
-    {
-        QueryBuilder::setDefaultFetchMode(PDO::FETCH_ASSOC);
-
-        $results = (new QueryBuilder(self::$pdo))
-            ->select()
-            ->from('users')
-            ->fetchAll();
-
-        foreach ($results as $result)
-            $this->assertIsArray($result);
-
-        QueryBuilder::setDefaultFetchMode(PDO::FETCH_OBJ);
-
-        $results = (new QueryBuilder(self::$pdo))
-            ->select()
-            ->from('users')
-            ->fetchAll();
-
-        foreach ($results as $result)
-            $this->assertIsObject($result);
-    }
-
     public function testOneCanRunMultipleQueriesFromTheSameInstance()
     {
         $this->builderWithPDO
