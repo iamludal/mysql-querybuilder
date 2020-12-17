@@ -26,14 +26,14 @@ abstract class Clause
     private $alreadyExecuted;
 
     /**
-     * @var mixed[]
-     */
-    private static $fetchArgs = [];
-
-    /**
-     * PDO params to be binded
+     * @var array PDO params to be binded
      */
     protected $params = [];
+
+    /**
+     * @var string The table name
+     */
+    protected $table;
 
     /**
      * Create a new clause
@@ -50,15 +50,25 @@ abstract class Clause
      * 
      * @throws InvalidQueryException if the query is invalid/incomplete
      */
-    abstract protected function validate();
+    abstract protected function validate(): void;
 
     /**
      * Convert the query into a SQL string
      * 
-     * @return string the SQL string
      * @throws InvalidQueryException if the query is invalid/incomplete
      */
     abstract public function toSQL(): string;
+
+    /**
+     * Set the table on which to execute the query.
+     * 
+     * @param $table the table name
+     */
+    public function setTable(string $table): self
+    {
+        $this->table = $table;
+        return $this;
+    }
 
     /**
      * Set the PDO fetch mode. Works exactly the same as
@@ -66,7 +76,7 @@ abstract class Clause
      * 
      * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
      */
-    public function setFetchMode(...$args)
+    public function setFetchMode(...$args): self
     {
         if ($this->statement === null)
             $this->createStatement();
@@ -76,39 +86,23 @@ abstract class Clause
     }
 
     /**
-     * Set the default fetch mode for all `Clause` instances
-     * 
-     * @param int $fetchArgs PDO fetch args
-     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
-     */
-    public static function setDefaultFetchMode(...$fetchArgs)
-    {
-        self::$fetchArgs = $fetchArgs;
-    }
-
-    /**
      * Bind a value to a prepared parameter
      * 
-     * @param string $param the name of the parameter
-     * @param mixed $value the the value to bind to the parameter
-     * @param int $type (optional) the PDO type of the value (PDO::PARAM_INT, ...)
+     * @param $param the name of the parameter
+     * @param $value the the value to bind to the parameter
+     * @param $type (optional) the PDO type of the value (PDO::PARAM_INT, ...)
      * if omitted, the class will automatically detect the corresponding PDO
      * type of the value
-     * @return $this
      * @throws BadMethodCallException if there is no PDO instance
-     * @throws InvalidArgumentException if $param is not a string
      */
-    public function setParam($param, $value, $type = null)
+    public function setParam(string $param, $value, int $type = null): self
     {
-        if (!is_string($param))
-            throw new InvalidArgumentException('Param name should be a string');
-        elseif (is_null($this->statement))
+        if (is_null($this->statement))
             $this->createStatement();
 
         $PDOType = is_null($type) ? Utils::getPDOType($value) : $type;
 
         $this->statement->bindParam($param, $value, $PDOType);
-
         return $this;
     }
 
@@ -118,12 +112,10 @@ abstract class Clause
      * 
      * PDO params types are automatically guessed by the class
      * 
-     * @param mixed[] $params params to set : [':param1' => $value1, ...]
-     * @return $this
+     * @param $params params to set : [':param1' => $value1, ...]
      * @throws BadMethodCallException if there is no PDO instance set
-     * @throws InvalidArgumentException if $params is not an associative array
      */
-    public function setParams($params)
+    public function setParams(array $params): self
     {
         foreach ($params as $key => $value)
             $this->setParam($key, $value);
@@ -135,14 +127,13 @@ abstract class Clause
      * To bind a column to a specific typs. Works exactly the same as the
      * PDOStatement::bindColumn method
      * 
-     * @param string $column the column to bind
-     * @param mixed $var the variable that will receive the value
-     * @param mixed[] ...$args other args for the PDO bindColumn method
-     * @return $this
+     * @param $column the column to bind
+     * @param $var the variable that will receive the value
+     * @param ...$args other args for the PDO bindColumn method
      * @throws PDOException if there is a PDO exception
      * @throws BadMethodCallException if there is no PDO instance
      */
-    public function bindColumn($column, &$var, ...$args)
+    public function bindColumn(string $column, &$var, ...$args): self
     {
         if ($this->statement === null)
             $this->createStatement();
@@ -158,10 +149,9 @@ abstract class Clause
      * You can call this method directly on the builder : if the query has
      * not been executed yet, it will execute it automatically
      * 
-     * @return int the row count
      * @throws BadMethodCallException if there is no PDO instance
      */
-    public function rowCount()
+    public function rowCount(): int
     {
         if (!$this->alreadyExecuted)
             $this->execute();
@@ -174,7 +164,7 @@ abstract class Clause
      * 
      * @throws BadMethodCallException if there is no PDO instance
      */
-    protected function createStatement()
+    protected function createStatement(): void
     {
         if ($this->pdo === null)
             throw new BadMethodCallException('No PDO instance specified');
@@ -189,17 +179,12 @@ abstract class Clause
         }
 
         $this->setParams($this->params);
-
-        if (self::$fetchArgs)
-            $this->statement->setFetchMode(...self::$fetchArgs);
     }
 
     /**
-     * Get the current PDO statement. If it doesn't exist, null is returned.
-     * 
-     * @return PDOStatement the PDOStatement corresponding to the current query
+     * Get the current PDO statement. If it doesn't exist, create it.
      */
-    public function getStatement()
+    public function getStatement(): PDOStatement
     {
         if (!$this->statement)
             $this->createStatement();
@@ -210,13 +195,12 @@ abstract class Clause
     /**
      * Execute the current query. Works exactly the same as PDOStatement::execute
      * 
-     * @return bool TRUE on success or FALSE on failure
      * @throws PDOException On error if PDO::ERRMODE_EXCEPTION option is true.
      * @throws InvalidQueryException if the query is invalid/incomplete
      * @throws BadMethodCallException if there is no PDO instance
      * @see https://www.php.net/manual/en/pdostatement.execute.php
      */
-    public function execute(...$args)
+    public function execute(...$args): bool
     {
         if ($this->pdo === null)
             throw new BadMethodCallException('Cannot execute without a PDO instance');
@@ -249,7 +233,7 @@ abstract class Clause
      * 
      * @see php.net/manual/en/pdostatement.fetchall.php
      */
-    public function fetchAll(...$args)
+    public function fetchAll(...$args): array
     {
         if (!$this->alreadyExecuted)
             $this->execute();

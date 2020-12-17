@@ -53,7 +53,7 @@ final class InsertTest extends TestCase
     public function testSimpleInsert()
     {
         $sql = $this->getBuilder()
-            ->into('users')
+            ->setTable('users')
             ->values(['username' => 'Billy', 'id' => 5])
             ->toSQL();
 
@@ -74,7 +74,7 @@ final class InsertTest extends TestCase
     public function testRowIsInserted()
     {
         $this->getBuilderWithPDO()
-            ->into('users')
+            ->setTable('users')
             ->values(['username' => 'Bob', 'id' => 5])
             ->execute();
 

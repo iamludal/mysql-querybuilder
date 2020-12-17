@@ -2,7 +2,6 @@
 
 namespace Ludal\QueryBuilder;
 
-use Ludal\QueryBuilder\Clauses\Clause;
 use Ludal\QueryBuilder\Clauses\Select;
 use Ludal\QueryBuilder\Clauses\Insert;
 use Ludal\QueryBuilder\Clauses\Update;
@@ -12,6 +11,9 @@ use PDO;
 
 class QueryBuilder
 {
+    /**
+     * @var PDO
+     */
     private $pdo;
 
     /**
@@ -19,7 +21,6 @@ class QueryBuilder
      * allow to fetch/execute the queries directly)
      * 
      * @param PDO $pdo (optional) a PDO instance
-     * @throws InvalidArgumentException if $pdo is not a PDO instance
      */
     public function __construct(PDO $pdo = null)
     {
@@ -29,10 +30,10 @@ class QueryBuilder
     /**
      * Corresponds to the sql SELECT clause 
      * 
-     * @param string|array ...$columns the columns to select
+     * @param ...$columns the columns to select
      * @return Select
      */
-    public function select(...$columns)
+    public function select(...$columns): Select
     {
         return (new Select($this->pdo))->setColumns(...$columns);
     }
@@ -40,23 +41,21 @@ class QueryBuilder
     /**
      * Corresponds to the sql INSERT INTO clause
      * 
-     * @param string $table the table in which to insert values
+     * @param $table the table in which to insert values
      * @return Insert
-     * @throws InvalidArgumentException if $table is not a string
      */
-    public function insertInto($table)
+    public function insertInto(string $table): Insert
     {
-        return (new Insert($this->pdo))->into($table);
+        return (new Insert($this->pdo))->setTable($table);
     }
 
     /**
      * Corresponds to the sql UPDATE clause
      * 
-     * @param string $table the table to update
+     * @param $table the table to update
      * @return Update
-     * @throws InvalidArgumentException if $table is not a string
      */
-    public function update($table)
+    public function update(string $table)
     {
         return (new Update($this->pdo))->setTable($table);
     }
@@ -64,23 +63,11 @@ class QueryBuilder
     /**
      * Corresponds to the sql DELETE FROM clause
      * 
-     * @param string $table the table from which to delete rows
+     * @param $table the table from which to delete rows
      * @return Delete
-     * @throws InvalidArgumentException if $table is not a string
      */
-    public function deleteFrom($table)
+    public function deleteFrom(string $table)
     {
-        return (new Delete($this->pdo))->from($table);
-    }
-
-    /**
-     * Set the PDO fetch mode. Works exactly the same as
-     * PDOStatement::setFetchMode
-     * 
-     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
-     */
-    public static function setDefaultFetchMode(...$fetchArgs)
-    {
-        Clause::setDefaultFetchMode(...$fetchArgs);
+        return (new Delete($this->pdo))->setTable($table);
     }
 }

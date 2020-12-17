@@ -244,37 +244,6 @@ final class ClauseTest extends TestCase
         $this->assertEquals($city, $results[1]->city);
     }
 
-    public function testSetDefaultFetchMode()
-    {
-        $result = (new Select(self::$pdo))
-            ->setColumns()
-            ->from('users')
-            ->fetch();
-
-        $this->assertIsArray($result); // default PDO fetch mode
-
-        Clause::setDefaultFetchMode(PDO::FETCH_CLASS, stdClass::class);
-
-        $result = (new Select(self::$pdo))
-            ->setColumns()
-            ->from('users')
-            ->fetch();
-
-        $this->assertInstanceOf(stdClass::class, $result);
-    }
-
-    public function testSetDefaultFetchModeOnTwoDifferentInstances()
-    {
-        Clause::setDefaultFetchMode(PDO::FETCH_CLASS, stdClass::class);
-
-        $result = $this->select
-            ->setColumns()
-            ->from('users')
-            ->fetch();
-
-        $this->assertInstanceOf(stdClass::class, $result);
-    }
-
     public function testFetchWithNoExistingRow()
     {
         $result = $this->select
@@ -299,7 +268,7 @@ final class ClauseTest extends TestCase
     public function testInsertRowCountOnInsert()
     {
         $count = $this->insert
-            ->into('users')
+            ->setTable('users')
             ->values(['id' => 10, 'name' => 'User 10'])
             ->rowCount();
 
@@ -368,7 +337,7 @@ final class ClauseTest extends TestCase
     public function testErrorCodeCorrespondsToTheStatement()
     {
         $stmt = $this->insert
-            ->into('users')
+            ->setTable('users')
             ->values(['id' => 1])
             ->getStatement();
 

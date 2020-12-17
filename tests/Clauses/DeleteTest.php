@@ -37,30 +37,10 @@ final class DeleteTest extends TestCase
         self::$pdo->exec('CREATE TABLE users (id int, username text)');
     }
 
-    public function invalidTableNames()
-    {
-        return [
-            [2],
-            [true],
-            [['name']],
-            [new stdClass()]
-        ];
-    }
-
-    /**
-     * @dataProvider invalidTableNames
-     */
-    public function testInvalidTableNames($invalidName)
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->builder->from($invalidName);
-    }
-
     public function testSimpleQuery()
     {
         $sql = $this->builder
-            ->from('users')
+            ->setTable('users')
             ->toSQL();
 
         $this->assertEquals('DELETE FROM users', $sql);
@@ -69,7 +49,7 @@ final class DeleteTest extends TestCase
     public function testQueryWithSimpleCondition()
     {
         $sql = $this->builder
-            ->from('users')
+            ->setTable('users')
             ->where('id = 6')
             ->toSQL();
 
@@ -79,7 +59,7 @@ final class DeleteTest extends TestCase
     public function testQueryWithMultipleCondition()
     {
         $sql = $this->builder
-            ->from('users')
+            ->setTable('users')
             ->where('id = 6', 'age < 18')
             ->orWhere('name = :name')
             ->toSQL();
@@ -95,7 +75,7 @@ final class DeleteTest extends TestCase
         $this->assertCount(5, $results);
 
         $this->builder
-            ->from('users')
+            ->setTable('users')
             ->where('id < 5')
             ->execute();
 
@@ -113,7 +93,7 @@ final class DeleteTest extends TestCase
         $this->assertCount(5, $results);
 
         $this->builder
-            ->from('users')
+            ->setTable('users')
             ->where('id < :id')
             ->setParam(':id', 5)
             ->execute();
@@ -127,7 +107,7 @@ final class DeleteTest extends TestCase
     public function testRowCount()
     {
         $count = $this->builder
-            ->from('users')
+            ->setTable('users')
             ->where('id < 5')
             ->rowCount();
 

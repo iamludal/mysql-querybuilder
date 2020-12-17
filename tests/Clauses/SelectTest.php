@@ -128,28 +128,6 @@ final class SelectTest extends TestCase
         $this->assertEquals('SELECT name, city AS c, age AS a FROM users', $sql);
     }
 
-    public function invalidTableNames()
-    {
-        return [
-            [1],
-            [9],
-            [false],
-            [new stdClass()]
-        ];
-    }
-
-    /**
-     * @dataProvider invalidTableNames
-     */
-    public function testInvalidTableNames($invalidName)
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->builder
-            ->setColumns()
-            ->from($invalidName);
-    }
-
     public function testQueryWithWhereClause()
     {
         $sql = $this->builder
@@ -174,15 +152,17 @@ final class SelectTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
-    public function testEmptyWhereIsLikeNotHavingIt()
+    public function testWhereAsAssociativeArray()
     {
         $sql = $this->builder
             ->setColumns()
             ->from('users')
-            ->where()
+            ->where(['id' => 5, 'age' => 18])
             ->toSQL();
 
-        $this->assertEquals('SELECT * FROM users', $sql);
+        $expected = 'SELECT * FROM users WHERE (id = :_id AND age = :_age)';
+
+        $this->assertEquals($expected, $sql);
     }
 
     public function testWhereOrWhere()
@@ -225,29 +205,6 @@ final class SelectTest extends TestCase
         $this->assertEquals('SELECT * FROM cars LIMIT 10', $sql);
     }
 
-    public function invalidLimits()
-    {
-        return [
-            ['12'],
-            [true],
-            [new stdClass()],
-            [3.5]
-        ];
-    }
-
-    /**
-     * @dataProvider invalidLimits
-     */
-    public function testInvalidLimits($invalidLimit)
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->builder
-            ->setColumns()
-            ->from('cars')
-            ->limit($invalidLimit);
-    }
-
     public function testLimitAndOffset()
     {
         $sql1 = (new Select())
@@ -278,29 +235,6 @@ final class SelectTest extends TestCase
             ->toSQL();
 
         $this->assertEquals('SELECT * FROM cars OFFSET 5', $sql);
-    }
-
-    public function invalidOffsets()
-    {
-        return [
-            ["3"],
-            [true],
-            [new stdClass()],
-            [4.3]
-        ];
-    }
-
-    /**
-     * @dataProvider invalidOffsets
-     */
-    public function testInvalidOffset($invalidOffset)
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->builder
-            ->setColumns()
-            ->from('cars')
-            ->offset($invalidOffset);
     }
 
     public function testSelectAsSequential()

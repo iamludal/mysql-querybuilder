@@ -2,44 +2,19 @@
 
 namespace Ludal\QueryBuilder\Clauses;
 
-use BadMethodCallException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use InvalidArgumentException;
 
 class Insert extends Clause
 {
     /**
-     * @var string the table in which to insert values
-     */
-    private $table;
-
-    /**
-     * Specify the table in which to insert values
+     * Specify the row to insert in the table. It should be of the form:
+     * <code> [$column1 => $value1, $column2 => $value2, ...] </code>
      * 
-     * @param string $table the table
-     * @return $this
-     * @throws InvalidArgumentException is $table is not a string
+     * @param $row the values of the row to insert
+     * @throws InvalidArgumentException the $row is not an associative array
      */
-    public function into($table)
-    {
-        if (!is_string($table))
-            throw new InvalidArgumentException('Table name should be a string');
-
-        $this->table = $table;
-
-        return $this;
-    }
-
-    /**
-     * Specify the row to insert in the table.
-     * 
-     * It should be of the form: [$column1 => $value1, $column2 => $value2, ...]
-     * 
-     * @param array row the row to insert
-     * @return $this
-     * @throws InvalidArgumentException
-     */
-    public function values($row)
+    public function values(array $row): self
     {
         if (array_values($row) == $row)
             throw new InvalidArgumentException('Value should be an associative array');
@@ -50,7 +25,7 @@ class Insert extends Clause
         return $this;
     }
 
-    public function validate()
+    public function validate(): void
     {
         $conditions = [
             is_string($this->table),
@@ -58,7 +33,7 @@ class Insert extends Clause
         ];
 
         if (in_array(false, $conditions))
-            throw new InvalidQueryException('Query is invalid or incomplete');
+            throw new InvalidQueryException();
     }
 
     public function toSQL(): string
