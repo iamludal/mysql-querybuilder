@@ -12,7 +12,9 @@ use InvalidArgumentException;
 use BadMethodCallException;
 use stdClass;
 use Error;
+use Exception;
 use PDO;
+use PDOException;
 use PDOStatement;
 
 final class ClauseTest extends TestCase
@@ -314,7 +316,7 @@ final class ClauseTest extends TestCase
 
     public function testSetParamsWithSequentialArrayThrowsException()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectError(Error::class);
 
         $this->select
             ->setColumns()
