@@ -13,21 +13,21 @@ final class UtilsTest extends TestCase
     public function testInt()
     {
         $type = Utils::getPDOType(5);
-
         $this->assertEquals(PDO::PARAM_INT, $type);
     }
 
     public function testBool()
     {
         $type = Utils::getPDOType(false);
-
         $this->assertEquals(PDO::PARAM_BOOL, $type);
     }
 
     public function testString()
     {
-        $type = Utils::getPDOType("");
+        $type = Utils::getPDOType("string");
+        $this->assertEquals(PDO::PARAM_STR, $type);
 
+        $type = Utils::getPDOType("0");
         $this->assertEquals(PDO::PARAM_STR, $type);
     }
 
@@ -43,28 +43,24 @@ final class UtilsTest extends TestCase
         $res = tmpfile();
         $type = Utils::getPDOType($res);
         fclose($res);
-
         $this->assertEquals(PDO::PARAM_LOB, $type);
     }
 
     public function testDouble()
     {
         $type = Utils::getPDOType(3.14);
-
         $this->assertEquals(PDO::PARAM_STR, $type);
     }
 
     public function testArrayThrowsException()
     {
         $this->expectException(InvalidArgumentException::class);
-
         Utils::getPDOType([]);
     }
 
     public function testObjectThrowsException()
     {
         $this->expectException(InvalidArgumentException::class);
-
         Utils::getPDOType(new stdClass());
     }
 }
