@@ -314,18 +314,6 @@ final class ClauseTest extends TestCase
         $this->assertContains($results[1], ['User 0', 'User 1']);
     }
 
-    public function testSetParamsWithSequentialArrayThrowsException()
-    {
-        $this->expectError(Error::class);
-
-        $this->select
-            ->setColumns()
-            ->from('users')
-            ->where('id = :id')
-            ->orWhere('name = :name')
-            ->setParams([1, 'User 0']);
-    }
-
     public function testGetStatementReturnsPDOStatement()
     {
         $stmt = $this->select
@@ -343,7 +331,11 @@ final class ClauseTest extends TestCase
             ->values(['id' => 1])
             ->getStatement();
 
-        $stmt->execute();
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+        }
+
         $errorCode = $stmt->errorCode();
 
         $this->assertEquals(1, preg_match('/^23/', $errorCode));
