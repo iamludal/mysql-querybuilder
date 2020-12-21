@@ -16,7 +16,7 @@ abstract class WhereClause extends Clause
      * @param ...$conditions the condition
      * @throws InvalidArgumentException if any condition is not a string/array
      */
-    public function where(...$conditions): self
+    public function where(...$conditions)
     {
         foreach ($conditions as $condition) {
             if (self::isAssociativeArray($condition)) {
