@@ -33,7 +33,9 @@ abstract class WhereClause extends Clause
                 throw new InvalidArgumentException('Conditions must be strings');
         }
 
-        $this->conditions[] = implode(' AND ', $conditions);
+        if ($conditions)
+            $this->conditions[] = implode(' AND ', $conditions);
+
         return $this;
     }
 

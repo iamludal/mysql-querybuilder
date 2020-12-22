@@ -267,4 +267,17 @@ final class SelectTest extends TestCase
 
         $this->assertEquals($expected, $sql);
     }
+
+    public function testWhereWithEmptyArray()
+    {
+        $sql = $this->builder
+            ->setColumns()
+            ->from('users')
+            ->where([])
+            ->toSQL();
+
+        $expected = "SELECT * FROM users";
+
+        $this->assertEquals($expected, $sql);
+    }
 }
