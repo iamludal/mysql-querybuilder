@@ -70,4 +70,14 @@ class QueryBuilder
     {
         return (new Delete($this->pdo))->setTable($table);
     }
+
+    /**
+     * Returns the last insert id.
+     * 
+     * @return string the id (as a string)
+     */
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
+    }
 }
