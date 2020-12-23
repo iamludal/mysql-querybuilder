@@ -85,8 +85,8 @@ $update->execute(); // executes the UPDATE query
 ### Code samples
 
 > ⚠️ For clarity reasons, these examples will use the same instance of
-`QueryBuilder`. It is actually recommended that you create a new one for each
-of your requests in order to prevent unexpected behaviours.
+> `QueryBuilder`. However, it is HIGHLY recommended that you create a new
+> one for each of your requests in order to prevent unexpected behaviours.
 
 ```php
 $pdo = new PDO(...);
