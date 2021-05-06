@@ -1,4 +1,4 @@
-# 🔧 PHP QueryBuilder
+# 🔧 MySQL QueryBuilder
 
 ![Build Status](https://travis-ci.org/iamludal/PHP-QueryBuilder.svg?branch=master)
 ![Version](https://img.shields.io/github/v/tag/iamludal/PHP-QueryBuilder?label=version)
