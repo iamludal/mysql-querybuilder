@@ -180,6 +180,43 @@ final class SelectTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
+    public function testQueryWithGroupByClause()
+    {
+        $sql = $this->builder
+            ->setColumns('COUNT(*)')
+            ->from('users')
+            ->groupBy('group_id')
+            ->toSQL();
+
+        $this->assertEquals('SELECT COUNT(*) FROM users GROUP BY group_id', $sql);
+    }
+
+    public function testQueryWithMultipleGroupByClauses()
+    {
+        $sql = $this->builder
+            ->setColumns('COUNT(*)')
+            ->from('users')
+            ->groupBy('group_id', 'second_group_id')
+            ->toSQL();
+
+        $expected = 'SELECT COUNT(*) FROM users GROUP BY group_id, second_group_id';
+
+        $this->assertEquals($expected, $sql);
+    }
+
+    public function testGroupByAsAssociativeArray()
+    {
+        $sql = $this->builder
+            ->setColumns('COUNT(*)')
+            ->from('users')
+            ->groupBy(['group_id' => 'ASC', 'second_group_id' => 'DESC'])
+            ->toSQL();
+
+        $expected = 'SELECT COUNT(*) FROM users GROUP BY group_id ASC, second_group_id DESC';
+
+        $this->assertEquals($expected, $sql);
+    }
+
     public function testOrderBy()
     {
         $sql = $this->builder

@@ -4,8 +4,10 @@ namespace Ludal\QueryBuilder\Clauses;
 
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Update extends WhereClause
+class Update extends Clause
 {
+    use Where;
+
     /**
      * @var array the params, in the form : "id = 4", "age = 20"...
      */

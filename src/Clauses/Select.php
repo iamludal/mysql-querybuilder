@@ -5,8 +5,11 @@ namespace Ludal\QueryBuilder\Clauses;
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Select extends WhereClause
+class Select extends Clause
 {
+    use Where;
+    use GroupBy;
+
     /**
      * @var array the columns to select
      */
@@ -171,6 +174,9 @@ class Select extends WhereClause
 
         if ($this->conditions)
             $sql .= ' ' . $this->whereToSQL();
+
+        if ($this->groupByColumns)
+            $sql .= ' ' . $this->groupByToSQL();
 
         if ($this->order)
             $sql .= " ORDER BY " . implode(', ', $this->order);

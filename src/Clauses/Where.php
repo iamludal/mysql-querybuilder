@@ -3,9 +3,8 @@
 namespace Ludal\QueryBuilder\Clauses;
 
 use InvalidArgumentException;
-use Ludal\QueryBuilder\Clauses\Clause;
 
-abstract class WhereClause extends Clause
+trait Where
 {
     protected $conditions;
 
@@ -58,16 +57,5 @@ abstract class WhereClause extends Clause
     {
         $conditions = implode(') OR (', $this->conditions);
         return "WHERE ($conditions)";
-    }
-
-    private static function isAssociativeArray($subject): bool
-    {
-        if (!is_array($subject))
-            return false;
-
-        foreach (array_keys($subject) as $key)
-            if (!is_string($key))
-                return false;
-        return true;
     }
 }
