@@ -5,7 +5,7 @@ namespace Ludal\QueryBuilder\Statements;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Update extends Clause
+class Update extends Statement
 {
     use Where;
 

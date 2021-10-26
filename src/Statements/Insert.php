@@ -5,7 +5,7 @@ namespace Ludal\QueryBuilder\Statements;
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Insert extends Clause
+class Insert extends Statement
 {
     /**
      * Specify the row to insert in the table. It should be of the form:

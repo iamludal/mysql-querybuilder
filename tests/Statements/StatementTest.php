@@ -1,6 +1,6 @@
 <?php
 
-namespace Ludal\QueryBuilder\Tests;
+namespace Ludal\QueryBuilder\Tests\Statements;
 
 use BadMethodCallException;
 use Ludal\QueryBuilder\Statements\Insert;
@@ -13,7 +13,7 @@ use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-final class ClauseTest extends TestCase
+final class StatementTest extends TestCase
 {
     /**
      * @var PDO

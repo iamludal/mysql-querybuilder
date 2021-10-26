@@ -5,7 +5,7 @@ namespace Ludal\QueryBuilder\Statements;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Delete extends Clause
+class Delete extends Statement
 {
     use Where;
 

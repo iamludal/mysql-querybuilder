@@ -7,7 +7,7 @@ use Ludal\QueryBuilder\Clauses\GroupBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Select extends Clause
+class Select extends Statement
 {
     use Where;
     use GroupBy;
@@ -64,7 +64,7 @@ class Select extends Clause
     }
 
     /**
-     * Add a column to the SELECT clause
+     * Add a column to the SELECT statement
      * 
      * @param string $columnName the name of the column to add
      * @param string|null $alias (optional) the alias to give to the column

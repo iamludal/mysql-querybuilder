@@ -27,7 +27,7 @@ class QueryBuilder
     }
 
     /**
-     * Corresponds to the sql SELECT clause 
+     * Corresponds to the sql SELECT statement
      * 
      * @param mixed ...$columns the columns to select
      * @return Select
@@ -38,7 +38,7 @@ class QueryBuilder
     }
 
     /**
-     * Corresponds to the sql INSERT INTO clause
+     * Corresponds to the sql INSERT INTO statement
      * 
      * @param string $table the table in which to insert values
      * @return Insert
@@ -49,7 +49,7 @@ class QueryBuilder
     }
 
     /**
-     * Corresponds to the sql UPDATE clause
+     * Corresponds to the sql UPDATE statement
      * 
      * @param string $table the table to update
      * @return Update
@@ -60,7 +60,7 @@ class QueryBuilder
     }
 
     /**
-     * Corresponds to the sql DELETE FROM clause
+     * Corresponds to the sql DELETE FROM statement
      * 
      * @param string $table the table from which to delete rows
      * @return Delete

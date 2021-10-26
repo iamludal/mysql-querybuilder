@@ -10,7 +10,7 @@ use PDO;
 use PDOException;
 use PDOStatement;
 
-abstract class Clause
+abstract class Statement
 {
     /**
      * @var PDO
@@ -38,9 +38,9 @@ abstract class Clause
     protected $table;
 
     /**
-     * Create a new clause
+     * Create a new statement
      *
-     * @param PDO|null $pdo (optional) a PDO instance to fetch/execute the clause
+     * @param PDO|null $pdo (optional) a PDO instance to fetch/execute the statement
      */
     public function __construct(PDO $pdo = null)
     {
@@ -177,7 +177,7 @@ abstract class Clause
     }
 
     /**
-     * Create a PDO statement from the current clause (sql)
+     * Create a PDO statement from the current statement (sql)
      *
      * @throws BadMethodCallException if there is no PDO instance
      * @throws InvalidQueryException if the query is invalid
