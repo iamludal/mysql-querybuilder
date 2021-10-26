@@ -4,8 +4,9 @@ namespace Ludal\QueryBuilder\Clauses;
 
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
-class Delete extends WhereClause
+class Delete extends Clause
 {
+    use Where;
 
     public function validate(): void
     {
