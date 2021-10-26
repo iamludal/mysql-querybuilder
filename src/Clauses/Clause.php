@@ -241,15 +241,4 @@ abstract class Clause
         return $this->statement
             ->fetchAll(...$args);
     }
-
-    protected static function isAssociativeArray($subject): bool
-    {
-        if (!is_array($subject))
-            return false;
-
-        foreach (array_keys($subject) as $key)
-            if (!is_string($key))
-                return false;
-        return true;
-    }
 }

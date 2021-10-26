@@ -37,4 +37,22 @@ class Utils
                 throw new UnknownType('Unknown type, please set it explicitly');
         }
     }
+
+    /**
+     * Verify if the given value is an associative array
+     * 
+     * @param mixed $subject the subject
+     * @return bool true if the given value is an associative array, false otherwise
+     */
+    public static function isAssociativeArray($subject): bool
+    {
+        if (!is_array($subject))
+            return false;
+
+        foreach (array_keys($subject) as $key)
+            if (!is_string($key))
+                return false;
+
+        return true;
+    }
 }

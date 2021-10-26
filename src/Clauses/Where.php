@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder\Clauses;
 
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Utils;
 
 trait Where
 {
@@ -18,7 +19,7 @@ trait Where
     public function where(...$conditions)
     {
         foreach ($conditions as $condition) {
-            if (self::isAssociativeArray($condition)) {
+            if (Utils::isAssociativeArray($condition)) {
                 $conds = [];
 
                 foreach ($condition as $key => $value) {

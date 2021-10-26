@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder\Clauses;
 
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Utils;
 
 trait GroupBy
 {
@@ -18,7 +19,7 @@ trait GroupBy
     public function groupBy(...$groupByColumns)
     {
         foreach ($groupByColumns as $groupByColumn) {
-            if (self::isAssociativeArray($groupByColumn)) {
+            if (Utils::isAssociativeArray($groupByColumn)) {
                 $conds = [];
 
                 foreach ($groupByColumn as $key => $value) {
