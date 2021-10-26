@@ -22,4 +22,7 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit
 
-      - run: echo "Hello ${{ github.event.inputs.version }}!"
+      - name: Rebase master from develop
+        run: |
+          git checkout master
+          git rebase develop
