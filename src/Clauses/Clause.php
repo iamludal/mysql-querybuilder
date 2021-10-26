@@ -204,12 +204,10 @@ abstract class Clause
     {
         if ($this->pdo === null)
             throw new BadMethodCallException('Cannot execute without a PDO instance');
-        elseif ($this->statement === null)
-            $this->createStatement();
 
         $this->alreadyExecuted = true;
 
-        return $this->statement->execute(...$args);
+        return $this->getStatement()->execute(...$args);
     }
 
     /**
