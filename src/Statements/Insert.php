@@ -1,10 +1,9 @@
 <?php
 
-namespace Ludal\QueryBuilder\Clauses;
+namespace Ludal\QueryBuilder\Statements;
 
-use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use InvalidArgumentException;
-use Ludal\QueryBuilder\Statements\Clause;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Insert extends Clause
 {

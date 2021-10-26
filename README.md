@@ -74,7 +74,7 @@ $update->execute(); // executes the UPDATE query
 ```
 
 
-### Supported clauses
+### Supported statements
 
 - [x] `SELECT`
 - [x] `UPDATE`
