@@ -1,9 +1,9 @@
 <?php
 
-namespace Ludal\QueryBuilder\Clauses;
+namespace Ludal\QueryBuilder\Statements;
 
+use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
-use Ludal\QueryBuilder\Statements\Clause;
 
 class Update extends Clause
 {

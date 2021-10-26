@@ -1,8 +1,8 @@
 <?php
 
-namespace Ludal\QueryBuilder\Tests\Clauses;
+namespace Ludal\QueryBuilder\Tests\Statements;
 
-use Ludal\QueryBuilder\Clauses\Update;
+use Ludal\QueryBuilder\Statements\Update;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PHPUnit\Framework\TestCase;
 use PDO;

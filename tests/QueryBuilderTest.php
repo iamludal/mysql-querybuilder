@@ -2,10 +2,10 @@
 
 namespace Ludal\QueryBuilder\Tests;
 
-use Ludal\QueryBuilder\Clauses\Delete;
-use Ludal\QueryBuilder\Clauses\Insert;
-use Ludal\QueryBuilder\Clauses\Select;
-use Ludal\QueryBuilder\Clauses\Update;
+use Ludal\QueryBuilder\Statements\Delete;
+use Ludal\QueryBuilder\Statements\Insert;
+use Ludal\QueryBuilder\Statements\Select;
+use Ludal\QueryBuilder\Statements\Update;
 use Ludal\QueryBuilder\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 

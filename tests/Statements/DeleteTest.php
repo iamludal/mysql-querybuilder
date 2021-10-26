@@ -1,8 +1,8 @@
 <?php
 
-namespace Ludal\QueryBuilder\Tests\Clauses;
+namespace Ludal\QueryBuilder\Tests\Statements;
 
-use Ludal\QueryBuilder\Clauses\Delete;
+use Ludal\QueryBuilder\Statements\Delete;
 use PDO;
 use PHPUnit\Framework\TestCase;
 

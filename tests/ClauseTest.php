@@ -3,9 +3,9 @@
 namespace Ludal\QueryBuilder\Tests;
 
 use BadMethodCallException;
-use Ludal\QueryBuilder\Clauses\Insert;
-use Ludal\QueryBuilder\Clauses\Select;
-use Ludal\QueryBuilder\Clauses\Update;
+use Ludal\QueryBuilder\Statements\Insert;
+use Ludal\QueryBuilder\Statements\Select;
+use Ludal\QueryBuilder\Statements\Update;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PDO;
 use PDOException;

@@ -1,10 +1,11 @@
 <?php
 
-namespace Ludal\QueryBuilder\Clauses;
+namespace Ludal\QueryBuilder\Statements;
 
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Clauses\GroupBy;
+use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
-use Ludal\QueryBuilder\Statements\Clause;
 
 class Select extends Clause
 {
