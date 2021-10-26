@@ -4,13 +4,14 @@ namespace Ludal\QueryBuilder\Statements;
 
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\GroupBy;
+use Ludal\QueryBuilder\Clauses\Limit;
 use Ludal\QueryBuilder\Clauses\OrderBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Select extends Statement
 {
-    use Where, GroupBy, OrderBy;
+    use Where, GroupBy, OrderBy, Limit;
 
     /**
      * @var array the columns to select
@@ -20,21 +21,16 @@ class Select extends Statement
     /**
      * @var int
      */
-    private $LIMIT;
-
-    /**
-     * @var int
-     */
     private $OFFSET;
 
     /**
      * Specify the columns to select.
-     * 
+     *
      * Each column should be either a string, which is the name of the column,
      * or an associative array of the form:
      *      [$column1 => $alias1, $column2 => $alias2, ...]
      * (where $columnX and $aliasX are strings)
-     * 
+     *
      * @param ...$columns (optional) the columns to select. Default: '*'
      * @return $this
      * @throws InvalidArgumentException if a column type is invalid
@@ -77,7 +73,7 @@ class Select extends Statement
      * Add columns from an array of the form:
      *      [$column1, ..., $column2 => $alias2, ...]
      * (where $columnX and $aliasX are strings)
-     * 
+     *
      * @param array $columns the array of columns
      */
     private function addColumnsFromArray(array $columns): void
@@ -91,7 +87,7 @@ class Select extends Statement
 
     /**
      * Specify the table from which to select
-     * 
+     *
      * @param string $table the table name
      * @param string|null $alias (optional) the alias to give to the table
      * @return $this
@@ -105,30 +101,8 @@ class Select extends Statement
     }
 
     /**
-     * Add the LIMIT of rows to select
-     * 
-     * If $limit is omitted, then $param1 correspond to the OFFSET.
-     * Otherwise, $param1 corresponds to the LIMIT.
-     * 
-     * @param int $param1 either the LIMIT or the OFFSET (see docs)
-     * @param int|null $limit (optional) the LIMIT
-     * @return $this
-     */
-    public function limit(int $param1, int $limit = null): self
-    {
-        if ($limit !== null) {
-            $this->LIMIT = $limit;
-            $this->OFFSET = $param1;
-        } else {
-            $this->LIMIT = $param1;
-        }
-
-        return $this;
-    }
-
-    /**
      * Add the OFFSET
-     * 
+     *
      * @param int $offset the offset
      * @return $this
      */
@@ -165,8 +139,8 @@ class Select extends Statement
         if ($this->order)
             $sql .= ' ' . $this->orderByToSQL();
 
-        if ($this->LIMIT)
-            $sql .= " LIMIT $this->LIMIT";
+        if ($this->_limit !== null)
+            $sql .= ' ' . $this->limitToSQL();
 
         if ($this->OFFSET)
             $sql .= " OFFSET $this->OFFSET";

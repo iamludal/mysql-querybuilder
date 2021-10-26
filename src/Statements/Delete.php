@@ -2,13 +2,14 @@
 
 namespace Ludal\QueryBuilder\Statements;
 
+use Ludal\QueryBuilder\Clauses\Limit;
 use Ludal\QueryBuilder\Clauses\OrderBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Delete extends Statement
 {
-    use Where, OrderBy;
+    use Where, OrderBy, Limit;
 
     public function validate(): void
     {
@@ -31,6 +32,9 @@ class Delete extends Statement
 
         if ($this->order)
             $sql .= ' ' . $this->orderByToSQL();
+
+        if ($this->_limit !== null)
+            $sql .= ' ' . $this->limitToSQL();
 
         return $sql;
     }
