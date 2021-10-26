@@ -130,13 +130,13 @@ class Select extends Statement
         $columns = implode(', ', $this->columns);
         $sql = "SELECT $columns FROM $this->table";
 
-        if ($this->conditions)
+        if ($this->_conditions)
             $sql .= ' ' . $this->whereToSQL();
 
-        if ($this->groupByColumns)
+        if ($this->_groupByColumns)
             $sql .= ' ' . $this->groupByToSQL();
 
-        if ($this->order)
+        if ($this->_order)
             $sql .= ' ' . $this->orderByToSQL();
 
         if ($this->_limit !== null)

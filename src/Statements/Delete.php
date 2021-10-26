@@ -27,10 +27,10 @@ class Delete extends Statement
 
         $sql = "DELETE FROM $this->table";
 
-        if ($this->conditions)
+        if ($this->_conditions)
             $sql .= ' ' . $this->whereToSQL();
 
-        if ($this->order)
+        if ($this->_order)
             $sql .= ' ' . $this->orderByToSQL();
 
         if ($this->_limit !== null)

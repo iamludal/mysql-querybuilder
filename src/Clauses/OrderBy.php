@@ -7,9 +7,9 @@ use InvalidArgumentException;
 trait OrderBy
 {
     /**
-     * @var array columns to order by
+     * @var string[] the columns to order by
      */
-    private $order = [];
+    private $_order = [];
 
     /**
      * Add ORDER BY clause to the query
@@ -26,7 +26,7 @@ trait OrderBy
         if (!in_array($direction, ['ASC', 'DESC']))
             throw new InvalidArgumentException('Direction should be either ASC or DESC');
 
-        $this->order[] = "$column $direction";
+        $this->_order[] = "$column $direction";
         return $this;
     }
 
@@ -37,6 +37,6 @@ trait OrderBy
      */
     public function orderByToSQL(): string
     {
-        return ' ORDER BY ' . implode(', ', $this->order);
+        return ' ORDER BY ' . implode(', ', $this->_order);
     }
 }
