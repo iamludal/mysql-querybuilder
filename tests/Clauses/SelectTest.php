@@ -70,7 +70,6 @@ final class SelectTest extends TestCase
 
     /**
      * @dataProvider goodConstructorArguments
-     * @doesNotPerformAssertions
      */
     public function testValidConstructorArguments($goodArgument)
     {

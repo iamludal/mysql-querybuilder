@@ -64,12 +64,13 @@ final class UtilsTest extends TestCase
         Utils::getPDOType(new stdClass());
     }
 
-    public function notAssociativeArrays(): array {
+    public function notAssociativeArrays(): array
+    {
         return [
-            3,
-            "Hello",
-            new stdClass(),
-            [1, 2, 3]
+            [3],
+            ["Hello"],
+            [new stdClass()],
+            [[1, 2, 3]]
         ];
     }
 
@@ -81,17 +82,19 @@ final class UtilsTest extends TestCase
         $this->assertFalse(Utils::isAssociativeArray($notAssociativeArray));
     }
 
-    public function associativeArrays(): array {
+    public function associativeArrays(): array
+    {
         return [
-            ["foo" => "bar"],
-            []
+            [[]],
+            [["foo" => "bar"]]
         ];
     }
 
     /**
      * @dataProvider associativeArrays
      */
-    public function testIsAssociativeArray($associativeArray) {
+    public function testIsAssociativeArray($associativeArray)
+    {
         $this->assertTrue(Utils::isAssociativeArray($associativeArray));
     }
 }
