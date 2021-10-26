@@ -2,12 +2,13 @@
 
 namespace Ludal\QueryBuilder\Statements;
 
+use Ludal\QueryBuilder\Clauses\OrderBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Delete extends Statement
 {
-    use Where;
+    use Where, OrderBy;
 
     public function validate(): void
     {
@@ -27,6 +28,9 @@ class Delete extends Statement
 
         if ($this->conditions)
             $sql .= ' ' . $this->whereToSQL();
+
+        if ($this->order)
+            $sql .= ' ' . $this->orderByToSQL();
 
         return $sql;
     }

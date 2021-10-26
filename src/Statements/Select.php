@@ -4,23 +4,18 @@ namespace Ludal\QueryBuilder\Statements;
 
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\GroupBy;
+use Ludal\QueryBuilder\Clauses\OrderBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Select extends Statement
 {
-    use Where;
-    use GroupBy;
+    use Where, GroupBy, OrderBy;
 
     /**
      * @var array the columns to select
      */
     private $columns = [];
-
-    /**
-     * @var array columns to order by
-     */
-    private $order = [];
 
     /**
      * @var int
@@ -110,25 +105,6 @@ class Select extends Statement
     }
 
     /**
-     * Add ORDER BY clause to the query
-     * 
-     * @param string $column the column to select
-     * @param string|null $direction (optional) the direction (ASC or DESC)
-     * @return $this
-     * @throws InvalidArgumentException if the direction is invalid
-     */
-    public function orderBy(string $column, string $direction = 'asc'): self
-    {
-        $direction = strtoupper($direction);
-
-        if (!in_array($direction, ['ASC', 'DESC']))
-            throw new InvalidArgumentException('Direction should be either ASC or DESC');
-
-        $this->order[] = "$column $direction";
-        return $this;
-    }
-
-    /**
      * Add the LIMIT of rows to select
      * 
      * If $limit is omitted, then $param1 correspond to the OFFSET.
@@ -187,7 +163,7 @@ class Select extends Statement
             $sql .= ' ' . $this->groupByToSQL();
 
         if ($this->order)
-            $sql .= " ORDER BY " . implode(', ', $this->order);
+            $sql .= ' ' . $this->orderByToSQL();
 
         if ($this->LIMIT)
             $sql .= " LIMIT $this->LIMIT";

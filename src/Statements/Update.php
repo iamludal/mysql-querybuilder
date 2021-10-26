@@ -2,12 +2,13 @@
 
 namespace Ludal\QueryBuilder\Statements;
 
+use Ludal\QueryBuilder\Clauses\OrderBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Update extends Statement
 {
-    use Where;
+    use Where, OrderBy;
 
     /**
      * @var array the params, in the form : "id = 4", "age = 20"...
@@ -69,6 +70,9 @@ class Update extends Statement
 
         if ($this->conditions)
             $sql .= ' ' . $this->whereToSQL();
+
+        if ($this->order)
+            $sql .= ' ' . $this->orderByToSQL();
 
         return $sql;
     }
