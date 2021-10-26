@@ -42,6 +42,8 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: master
 
       - name: Config git
         run: |
@@ -52,7 +54,6 @@ jobs:
         run: |
           git fetch --no-tags
           git tag ${{ github.event.inputs.version }}
-          git checkout master
-          git rebase develop
+          git rebase origin/develop
           git push
           git push --tags
