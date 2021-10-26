@@ -12,6 +12,7 @@ class Insert extends Clause
      * <code> [$column1 => $value1, $column2 => $value2, ...] </code>
      * 
      * @param array $row the values of the row to insert
+     * @return $this
      * @throws InvalidArgumentException the $row is not an associative array
      */
     public function values(array $row): self

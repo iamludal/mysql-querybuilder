@@ -65,6 +65,7 @@ abstract class Clause
      * Set the table on which to execute the query.
      * 
      * @param string $table the table name
+     * @return $this
      */
     public function setTable(string $table): self
     {
@@ -76,9 +77,10 @@ abstract class Clause
      * Set the PDO fetch mode. Works exactly the same as
      * PDOStatement::setFetchMode
      *
-     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
+     * @return $this
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
+     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
      */
     public function setFetchMode(...$args): self
     {
@@ -97,7 +99,7 @@ abstract class Clause
      * @param int|null $type (optional) the PDO type of the value (PDO::PARAM_INT, ...)
      * if omitted, the class will automatically detect the corresponding PDO
      * type of the value
-     * @return self
+     * @return $this
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if the value has an unknown type
      */
@@ -119,6 +121,7 @@ abstract class Clause
      * PDO params types are automatically guessed by the class
      *
      * @param array $params params to set : [':param1' => $value1, ...]
+     * @return $this
      * @throws BadMethodCallException if there is no PDO instance set
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if the value has an unknown type
@@ -138,6 +141,7 @@ abstract class Clause
      * @param string $column the column to bind
      * @param mixed $var the variable that will receive the value
      * @param mixed ...$args other args for the PDO bindColumn method
+     * @return $this
      * @throws PDOException if there is a PDO exception
      * @throws BadMethodCallException if there is no PDO instance
      * @throws InvalidQueryException
@@ -159,6 +163,7 @@ abstract class Clause
      * You can call this method directly on the builder : if the query has
      * not been executed yet, it will execute it automatically
      *
+     * @return int the row count
      * @throws BadMethodCallException if there is no PDO instance
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
@@ -198,6 +203,7 @@ abstract class Clause
     /**
      * Get the current PDO statement. If it doesn't exist, create it.
      *
+     * @return PDOStatement the PDO statement
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
      */
@@ -212,6 +218,7 @@ abstract class Clause
     /**
      * Execute the current query. Works exactly the same as PDOStatement::execute
      *
+     * @return bool the return value of PDOStatement::execute
      * @throws PDOException On error if PDO::ERRMODE_EXCEPTION option is true.
      * @throws InvalidQueryException if the query is invalid/incomplete
      * @throws BadMethodCallException if there is no PDO instance
@@ -232,9 +239,10 @@ abstract class Clause
      * Fetch the first row returned by the execution of the query.
      * Parameters are the same as the `PDOStatement::fetch` ones
      *
-     * @see https://www.php.net/manual/en/pdostatement.fetch.php
+     * @return mixed the return value of PDOStatement::fetch
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
+     * @see https://www.php.net/manual/en/pdostatement.fetch.php
      */
     public function fetch(...$args)
     {
@@ -249,6 +257,7 @@ abstract class Clause
      * Fetch all the rows returned by the execution of the query.
      * Parameters are the same as the `PDOStatement::fetchAll` ones
      *
+     * @return mixed the return value of PDOStatement::fetchAll
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
      * @see php.net/manual/en/pdostatement.fetchall.php

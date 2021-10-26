@@ -41,6 +41,8 @@ class Select extends Clause
      * (where $columnX and $aliasX are strings)
      * 
      * @param ...$columns (optional) the columns to select. Default: '*'
+     * @return $this
+     * @throws InvalidArgumentException if a column type is invalid
      */
     public function setColumns(...$columns): self
     {
@@ -97,6 +99,7 @@ class Select extends Clause
      * 
      * @param string $table the table name
      * @param string|null $alias (optional) the alias to give to the table
+     * @return $this
      */
     public function from(string $table, string $alias = null): self
     {
@@ -111,6 +114,7 @@ class Select extends Clause
      * 
      * @param string $column the column to select
      * @param string|null $direction (optional) the direction (ASC or DESC)
+     * @return $this
      * @throws InvalidArgumentException if the direction is invalid
      */
     public function orderBy(string $column, string $direction = 'asc'): self
@@ -132,6 +136,7 @@ class Select extends Clause
      * 
      * @param int $param1 either the LIMIT or the OFFSET (see docs)
      * @param int|null $limit (optional) the LIMIT
+     * @return $this
      */
     public function limit(int $param1, int $limit = null): self
     {
@@ -149,6 +154,7 @@ class Select extends Clause
      * Add the OFFSET
      * 
      * @param int $offset the offset
+     * @return $this
      */
     public function offset(int $offset): self
     {
