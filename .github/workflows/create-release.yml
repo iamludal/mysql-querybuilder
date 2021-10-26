@@ -1,0 +1,25 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    branches: [develop]
+    inputs:
+      version:
+        description: The version to release
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run tests
+        run: vendor/bin/phpunit
+
+      - run: echo "Hello ${{ github.event.inputs.version }}!"
