@@ -3,7 +3,7 @@
 namespace Ludal\QueryBuilder;
 
 use InvalidArgumentException;
-use SebastianBergmann\Type\UnknownType;
+use Ludal\QueryBuilder\Exceptions\UnknownType;
 use PDO;
 
 class Utils
@@ -16,7 +16,7 @@ class Utils
      * @throws UnknownType if the PDO type couldn't be determined
      * @throws InvalidArgumentException if the type is incorrect
      */
-    public static function getPDOType($value)
+    public static function getPDOType($value): int
     {
         switch (gettype($value)) {
             case 'string':

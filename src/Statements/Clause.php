@@ -1,12 +1,14 @@
 <?php
 
-namespace Ludal\QueryBuilder\Clauses;
+namespace Ludal\QueryBuilder\Statements;
 
-use InvalidArgumentException;
-use Ludal\QueryBuilder\Utils;
 use BadMethodCallException;
-use PDOStatement;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Exceptions\UnknownType;
+use Ludal\QueryBuilder\Utils;
 use PDO;
+use PDOException;
+use PDOStatement;
 
 abstract class Clause
 {
@@ -26,7 +28,7 @@ abstract class Clause
     private $alreadyExecuted;
 
     /**
-     * @var array PDO params to be binded
+     * @var array PDO params to be bound
      */
     protected $params = [];
 
@@ -37,8 +39,8 @@ abstract class Clause
 
     /**
      * Create a new clause
-     * 
-     * @param PDO $pdo (optional) a PDO instance to fetch/execute the clause
+     *
+     * @param PDO|null $pdo (optional) a PDO instance to fetch/execute the clause
      */
     public function __construct(PDO $pdo = null)
     {
@@ -53,7 +55,7 @@ abstract class Clause
     abstract protected function validate(): void;
 
     /**
-     * Convert the query into a SQL string
+     * Convert the query into an SQL string
      * 
      * @throws InvalidQueryException if the query is invalid/incomplete
      */
@@ -62,7 +64,7 @@ abstract class Clause
     /**
      * Set the table on which to execute the query.
      * 
-     * @param $table the table name
+     * @param string $table the table name
      */
     public function setTable(string $table): self
     {
@@ -73,8 +75,10 @@ abstract class Clause
     /**
      * Set the PDO fetch mode. Works exactly the same as
      * PDOStatement::setFetchMode
-     * 
+     *
      * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if a param value has an unknown type
      */
     public function setFetchMode(...$args): self
     {
@@ -87,13 +91,15 @@ abstract class Clause
 
     /**
      * Bind a value to a prepared parameter
-     * 
-     * @param $param the name of the parameter
-     * @param $value the the value to bind to the parameter
-     * @param $type (optional) the PDO type of the value (PDO::PARAM_INT, ...)
+     *
+     * @param string $param the name of the parameter
+     * @param mixed $value the value to bind to the parameter
+     * @param int|null $type (optional) the PDO type of the value (PDO::PARAM_INT, ...)
      * if omitted, the class will automatically detect the corresponding PDO
      * type of the value
-     * @throws BadMethodCallException if there is no PDO instance
+     * @return self
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if the value has an unknown type
      */
     public function setParam(string $param, $value, int $type = null): self
     {
@@ -109,11 +115,13 @@ abstract class Clause
     /**
      * Set multiple params at a time from an associative array that contains
      * params names as key and param values as values.
-     * 
+     *
      * PDO params types are automatically guessed by the class
-     * 
-     * @param $params params to set : [':param1' => $value1, ...]
+     *
+     * @param array $params params to set : [':param1' => $value1, ...]
      * @throws BadMethodCallException if there is no PDO instance set
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if the value has an unknown type
      */
     public function setParams(array $params): self
     {
@@ -124,14 +132,16 @@ abstract class Clause
     }
 
     /**
-     * To bind a column to a specific typs. Works exactly the same as the
+     * To bind a column to a specific types. Works exactly the same as the
      * PDOStatement::bindColumn method
-     * 
-     * @param $column the column to bind
-     * @param $var the variable that will receive the value
-     * @param ...$args other args for the PDO bindColumn method
+     *
+     * @param string $column the column to bind
+     * @param mixed $var the variable that will receive the value
+     * @param mixed ...$args other args for the PDO bindColumn method
      * @throws PDOException if there is a PDO exception
      * @throws BadMethodCallException if there is no PDO instance
+     * @throws InvalidQueryException
+     * @throws UnknownType if a param value has an unknown type
      */
     public function bindColumn(string $column, &$var, ...$args): self
     {
@@ -145,11 +155,13 @@ abstract class Clause
 
     /**
      * Return the number of rows affected by the execution of the query.
-     * 
+     *
      * You can call this method directly on the builder : if the query has
      * not been executed yet, it will execute it automatically
-     * 
+     *
      * @throws BadMethodCallException if there is no PDO instance
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if a param value has an unknown type
      */
     public function rowCount(): int
     {
@@ -161,8 +173,10 @@ abstract class Clause
 
     /**
      * Create a PDO statement from the current clause (sql)
-     * 
+     *
      * @throws BadMethodCallException if there is no PDO instance
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType a param value has an unknown type
      */
     protected function createStatement(): void
     {
@@ -183,6 +197,9 @@ abstract class Clause
 
     /**
      * Get the current PDO statement. If it doesn't exist, create it.
+     *
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if a param value has an unknown type
      */
     public function getStatement(): PDOStatement
     {
@@ -194,10 +211,11 @@ abstract class Clause
 
     /**
      * Execute the current query. Works exactly the same as PDOStatement::execute
-     * 
+     *
      * @throws PDOException On error if PDO::ERRMODE_EXCEPTION option is true.
      * @throws InvalidQueryException if the query is invalid/incomplete
      * @throws BadMethodCallException if there is no PDO instance
+     * @throws UnknownType if a param values has an unknown type
      * @see https://www.php.net/manual/en/pdostatement.execute.php
      */
     public function execute(...$args): bool
@@ -213,8 +231,10 @@ abstract class Clause
     /**
      * Fetch the first row returned by the execution of the query.
      * Parameters are the same as the `PDOStatement::fetch` ones
-     * 
+     *
      * @see https://www.php.net/manual/en/pdostatement.fetch.php
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if a param value has an unknown type
      */
     public function fetch(...$args)
     {
@@ -228,7 +248,9 @@ abstract class Clause
     /**
      * Fetch all the rows returned by the execution of the query.
      * Parameters are the same as the `PDOStatement::fetchAll` ones
-     * 
+     *
+     * @throws InvalidQueryException if the query is invalid
+     * @throws UnknownType if a param value has an unknown type
      * @see php.net/manual/en/pdostatement.fetchall.php
      */
     public function fetchAll(...$args): array

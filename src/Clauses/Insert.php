@@ -4,6 +4,7 @@ namespace Ludal\QueryBuilder\Clauses;
 
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Statements\Clause;
 
 class Insert extends Clause
 {
@@ -11,7 +12,7 @@ class Insert extends Clause
      * Specify the row to insert in the table. It should be of the form:
      * <code> [$column1 => $value1, $column2 => $value2, ...] </code>
      * 
-     * @param $row the values of the row to insert
+     * @param array $row the values of the row to insert
      * @throws InvalidArgumentException the $row is not an associative array
      */
     public function values(array $row): self
@@ -47,8 +48,6 @@ class Insert extends Clause
             return ":_$k";
         }, $keys));
 
-        $sql = "INSERT INTO $table ($columns) VALUES ($params)";
-
-        return $sql;
+        return "INSERT INTO $table ($columns) VALUES ($params)";
     }
 }

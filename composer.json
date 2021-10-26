@@ -1,32 +1,34 @@
 {
-    "name": "ludal/mysql-querybuilder",
-    "description": "A simple PHP query builder for SQL queries",
-    "type": "library",
-    "require-dev": {
-        "phpunit/phpunit": "^9"
-    },
-    "autoload": {
-        "psr-4": {
-            "Ludal\\QueryBuilder\\": "src",
-            "Ludal\\QueryBuilder\\Tests\\": "tests"
-        }
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Ludal",
-            "email": "ludovic.chombeau@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.0"
-    },
-    "homepage": "https://github.com/iamludal/PHP-QueryBuilder",
-    "keywords": [
-        "sql",
-        "querybuilder",
-        "query builder",
-        "query",
-        "builder"
-    ]
+  "name": "ludal/mysql-querybuilder",
+  "description": "A simple PHP query builder for SQL queries",
+  "type": "library",
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ludal\\QueryBuilder\\": "src",
+      "Ludal\\QueryBuilder\\Tests\\": "tests"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ludal",
+      "email": "ludovic.chombeau@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ext-pdo": "*"
+  },
+  "homepage": "https://github.com/iamludal/mysql-querybuilder",
+  "keywords": [
+    "mysql",
+    "sql",
+    "querybuilder",
+    "query builder",
+    "query",
+    "builder"
+  ]
 }
