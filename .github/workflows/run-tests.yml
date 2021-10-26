@@ -1,16 +1,18 @@
 name: PHPUnit
 
-on: [push]
+on:
+  - push
+  - pull_request
 
 jobs:
   run-tests:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Install dependencies
-      run: composer install
-    
-    - name: Run tests
-      run: vendor/bin/phpunit
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run tests
+        run: vendor/bin/phpunit
