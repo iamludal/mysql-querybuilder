@@ -4,6 +4,7 @@ namespace Ludal\QueryBuilder\Clauses;
 
 use InvalidArgumentException;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Statements\Clause;
 
 class Select extends Clause
 {
@@ -34,7 +35,7 @@ class Select extends Clause
      * Specify the columns to select.
      * 
      * Each column should be either a string, which is the name of the column,
-     * or an associatve array of the form:
+     * or an associative array of the form:
      *      [$column1 => $alias1, $column2 => $alias2, ...]
      * (where $columnX and $aliasX are strings)
      * 
@@ -62,8 +63,8 @@ class Select extends Clause
     /**
      * Add a column to the SELECT clause
      * 
-     * @param $columnName the name of the column to add
-     * @param $alias (optional) the alias to give to the column
+     * @param string $columnName the name of the column to add
+     * @param string|null $alias (optional) the alias to give to the column
      * @throws InvalidArgumentException if the name/alias is not valid
      */
     private function addColumn(string $columnName, string $alias = null): void
@@ -79,7 +80,7 @@ class Select extends Clause
      *      [$column1, ..., $column2 => $alias2, ...]
      * (where $columnX and $aliasX are strings)
      * 
-     * @param $columns the array of columns
+     * @param array $columns the array of columns
      */
     private function addColumnsFromArray(array $columns): void
     {
@@ -93,8 +94,8 @@ class Select extends Clause
     /**
      * Specify the table from which to select
      * 
-     * @param $table the table name
-     * @param $alias (optional) the alias to give to the table
+     * @param string $table the table name
+     * @param string|null $alias (optional) the alias to give to the table
      */
     public function from(string $table, string $alias = null): self
     {
@@ -107,8 +108,8 @@ class Select extends Clause
     /**
      * Add ORDER BY clause to the query
      * 
-     * @param $column the column to select
-     * @param $direction (optional) the direction (ASC or DESC)
+     * @param string $column the column to select
+     * @param string|null $direction (optional) the direction (ASC or DESC)
      * @throws InvalidArgumentException if the direction is invalid
      */
     public function orderBy(string $column, string $direction = 'asc'): self
@@ -128,8 +129,8 @@ class Select extends Clause
      * If $limit is omitted, then $param1 correspond to the OFFSET.
      * Otherwise, $param1 corresponds to the LIMIT.
      * 
-     * @param $param1 either the LIMIT or the OFFSET (see docs)
-     * @param $limit (optional) the LIMIT
+     * @param int $param1 either the LIMIT or the OFFSET (see docs)
+     * @param int|null $limit (optional) the LIMIT
      */
     public function limit(int $param1, int $limit = null): self
     {
@@ -146,7 +147,7 @@ class Select extends Clause
     /**
      * Add the OFFSET
      * 
-     * @param $offset the offset
+     * @param int $offset the offset
      */
     public function offset(int $offset): self
     {
@@ -170,7 +171,7 @@ class Select extends Clause
         $this->validate();
 
         $columns = implode(', ', $this->columns);
-        $sql = "SELECT $columns FROM {$this->table}";
+        $sql = "SELECT $columns FROM $this->table";
 
         if ($this->conditions)
             $sql .= ' ' . $this->whereToSQL();
@@ -182,10 +183,10 @@ class Select extends Clause
             $sql .= " ORDER BY " . implode(', ', $this->order);
 
         if ($this->LIMIT)
-            $sql .= " LIMIT {$this->LIMIT}";
+            $sql .= " LIMIT $this->LIMIT";
 
         if ($this->OFFSET)
-            $sql .= " OFFSET {$this->OFFSET}";
+            $sql .= " OFFSET $this->OFFSET";
 
         return $sql;
     }

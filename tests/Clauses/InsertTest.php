@@ -14,12 +14,12 @@ final class InsertTest extends TestCase
      */
     private static $pdo;
 
-    public function getBuilder()
+    public function getBuilder(): Insert
     {
         return new Insert();
     }
 
-    public function getBuilderWithPDO()
+    public function getBuilderWithPDO(): Insert
     {
         return new Insert(self::$pdo);
     }

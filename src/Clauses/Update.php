@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder\Clauses;
 
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Statements\Clause;
 
 class Update extends Clause
 {
@@ -16,7 +17,7 @@ class Update extends Clause
     /**
      * Set the values to update
      * 
-     * @param ...$values either a string, that is directly the value to set 
+     * @param mixed ...$values either a string, that is directly the value to set
      * ("id = 5", ...) or an associative array of the form: [$col => $val, ...]
      */
     public function set(...$values): self
@@ -34,8 +35,8 @@ class Update extends Clause
     /**
      * Set a value for the column to be updated
      * 
-     * @param $column the column name
-     * @param $value the value to set
+     * @param string $column the column name
+     * @param mixed $value the value to set
      */
     public function setValue(string $column, $value): self
     {
@@ -60,7 +61,7 @@ class Update extends Clause
     {
         $this->validate();
 
-        $sql = "UPDATE {$this->table} SET ";
+        $sql = "UPDATE $this->table SET ";
 
         $sql .= implode(', ', $this->updateParams);
 

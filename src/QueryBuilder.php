@@ -2,11 +2,10 @@
 
 namespace Ludal\QueryBuilder;
 
-use Ludal\QueryBuilder\Clauses\Select;
-use Ludal\QueryBuilder\Clauses\Insert;
-use Ludal\QueryBuilder\Clauses\Update;
 use Ludal\QueryBuilder\Clauses\Delete;
-use InvalidArgumentException;
+use Ludal\QueryBuilder\Clauses\Insert;
+use Ludal\QueryBuilder\Clauses\Select;
+use Ludal\QueryBuilder\Clauses\Update;
 use PDO;
 
 class QueryBuilder
@@ -18,9 +17,9 @@ class QueryBuilder
 
     /**
      * Create a new QueryBuilder from an optional PDO statement (that will
-     * allow to fetch/execute the queries directly)
+     * allow fetching/executing the queries directly)
      * 
-     * @param PDO $pdo (optional) a PDO instance
+     * @param PDO|null $pdo (optional) a PDO instance
      */
     public function __construct(PDO $pdo = null)
     {
@@ -30,7 +29,7 @@ class QueryBuilder
     /**
      * Corresponds to the sql SELECT clause 
      * 
-     * @param ...$columns the columns to select
+     * @param mixed ...$columns the columns to select
      * @return Select
      */
     public function select(...$columns): Select
@@ -41,7 +40,7 @@ class QueryBuilder
     /**
      * Corresponds to the sql INSERT INTO clause
      * 
-     * @param $table the table in which to insert values
+     * @param string $table the table in which to insert values
      * @return Insert
      */
     public function insertInto(string $table): Insert
@@ -52,10 +51,10 @@ class QueryBuilder
     /**
      * Corresponds to the sql UPDATE clause
      * 
-     * @param $table the table to update
+     * @param string $table the table to update
      * @return Update
      */
-    public function update(string $table)
+    public function update(string $table): Update
     {
         return (new Update($this->pdo))->setTable($table);
     }
@@ -63,10 +62,10 @@ class QueryBuilder
     /**
      * Corresponds to the sql DELETE FROM clause
      * 
-     * @param $table the table from which to delete rows
+     * @param string $table the table from which to delete rows
      * @return Delete
      */
-    public function deleteFrom(string $table)
+    public function deleteFrom(string $table): Delete
     {
         return (new Delete($this->pdo))->setTable($table);
     }
@@ -76,7 +75,7 @@ class QueryBuilder
      * 
      * @return string the id (as a string)
      */
-    public function lastInsertId()
+    public function lastInsertId(): string
     {
         return $this->pdo->lastInsertId();
     }

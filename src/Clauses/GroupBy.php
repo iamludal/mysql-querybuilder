@@ -3,6 +3,8 @@
 namespace Ludal\QueryBuilder\Clauses;
 
 use InvalidArgumentException;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Exceptions\UnknownType;
 use Ludal\QueryBuilder\Utils;
 
 trait GroupBy
@@ -12,22 +14,24 @@ trait GroupBy
     /**
      * Add a select groupByColumn (GROUP BY clause). The groupByColumns can be as strings
      * or associative array.
-     * 
-     * @param ...$groupByColumns the groupByColumn
+     *
+     * @param mixed ...$groupByColumns the groupByColumn
      * @throws InvalidArgumentException if any groupByColumn is not a string/array
+     * @throws InvalidQueryException if the query is invalid or incomplete
+     * @throws UnknownType if a param value has an unknown type
      */
     public function groupBy(...$groupByColumns)
     {
         foreach ($groupByColumns as $groupByColumn) {
             if (Utils::isAssociativeArray($groupByColumn)) {
-                $conds = [];
+                $conditions = [];
 
                 foreach ($groupByColumn as $key => $value) {
-                    $conds[] = "$key $value";
+                    $conditions[] = "$key $value";
                     $this->setParam($key, $value);
                 }
 
-                return $this->groupBy(...$conds);
+                return $this->groupBy(...$conditions);
             }
             if (!is_string($groupByColumn))
                 throw new InvalidArgumentException('groupByColumns must be strings');
@@ -40,7 +44,7 @@ trait GroupBy
     }
 
     /**
-     * Convert the current GROUP BY into a SQL string
+     * Convert the current GROUP BY into an SQL string
      */
     protected function groupByToSQL(): string
     {

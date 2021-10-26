@@ -3,6 +3,7 @@
 namespace Ludal\QueryBuilder\Clauses;
 
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
+use Ludal\QueryBuilder\Statements\Clause;
 
 class Delete extends Clause
 {
@@ -22,7 +23,7 @@ class Delete extends Clause
     {
         $this->validate();
 
-        $sql = "DELETE FROM {$this->table}";
+        $sql = "DELETE FROM $this->table";
 
         if ($this->conditions)
             $sql .= ' ' . $this->whereToSQL();

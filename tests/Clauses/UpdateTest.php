@@ -40,7 +40,7 @@ final class UpdateTest extends TestCase
     {
         $sql = $this->builder
             ->setTable('users')
-            ->set(['name' => 'Ludal', 'age' => 20])
+            ->set(['name' => 'John', 'age' => 20])
             ->toSQL();
 
         $expected = 'UPDATE users SET name = :_name, age = :_age';
@@ -52,7 +52,7 @@ final class UpdateTest extends TestCase
     {
         $sql = $this->builder
             ->setTable('users')
-            ->set(['name' => 'Ludal', 'age' => 20])
+            ->set(['name' => 'John', 'age' => 20])
             ->where('id = 8')
             ->toSQL();
 
@@ -61,11 +61,11 @@ final class UpdateTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
-    public function testSetWithDifferentTyps()
+    public function testSetWithDifferentTypes()
     {
         $sql = $this->builder
             ->setTable('users')
-            ->set(['name' => 'Ludal', 'age' => 20], 'id = 20')
+            ->set(['name' => 'John', 'age' => 20], 'id = 20')
             ->toSQL();
 
         $expected = 'UPDATE users SET name = :_name, age = :_age, id = 20';

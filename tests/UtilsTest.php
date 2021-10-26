@@ -63,4 +63,38 @@ final class UtilsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         Utils::getPDOType(new stdClass());
     }
+
+    public function notAssociativeArrays(): array
+    {
+        return [
+            [3],
+            ["Hello"],
+            [new stdClass()],
+            [[1, 2, 3]]
+        ];
+    }
+
+    /**
+     * @dataProvider notAssociativeArrays
+     */
+    public function testIsNotAssociativeArray($notAssociativeArray)
+    {
+        $this->assertFalse(Utils::isAssociativeArray($notAssociativeArray));
+    }
+
+    public function associativeArrays(): array
+    {
+        return [
+            [[]],
+            [["foo" => "bar"]]
+        ];
+    }
+
+    /**
+     * @dataProvider associativeArrays
+     */
+    public function testIsAssociativeArray($associativeArray)
+    {
+        $this->assertTrue(Utils::isAssociativeArray($associativeArray));
+    }
 }
