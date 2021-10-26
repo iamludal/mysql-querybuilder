@@ -2,13 +2,12 @@
 
 namespace Ludal\QueryBuilder\Tests\Clauses;
 
-use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use Ludal\QueryBuilder\Clauses\Select;
-use PHPUnit\Framework\TestCase;
-use InvalidArgumentException;
-use TypeError;
-use stdClass;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PDO;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use TypeError;
 
 final class SelectTest extends TestCase
 {
@@ -38,7 +37,7 @@ final class SelectTest extends TestCase
         $this->builder = new Select(self::$pdo);
     }
 
-    public function badConstructorArguments()
+    public function badConstructorArguments(): array
     {
         return [
             [0],
@@ -61,7 +60,7 @@ final class SelectTest extends TestCase
         new Select($badArgument);
     }
 
-    public function goodConstructorArguments()
+    public function goodConstructorArguments(): array
     {
         return [
             [null],
@@ -75,7 +74,8 @@ final class SelectTest extends TestCase
      */
     public function testValidConstructorArguments($goodArgument)
     {
-        new Select($goodArgument);
+        $select = new Select($goodArgument);
+        $this->assertNotNull($select);
     }
 
     public function testSelectMethodReturnsTheInstance()
@@ -94,18 +94,18 @@ final class SelectTest extends TestCase
             (new Select())->where('id = 5')
         ];
 
-        $count = count($invalidQueries);
-        $count = 0;
+        $expectedCount = count($invalidQueries);
+        $actualCount = 0;
 
         foreach ($invalidQueries as $query) {
             try {
                 $query->toSQL();
             } catch (InvalidQueryException $e) {
-                $count++;
+                $actualCount++;
             }
         }
 
-        $this->assertEquals($count, $count);
+        $this->assertEquals($expectedCount, $actualCount);
     }
 
     public function testSimpleQuery()

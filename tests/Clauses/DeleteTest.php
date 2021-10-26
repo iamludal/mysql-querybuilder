@@ -2,11 +2,9 @@
 
 namespace Ludal\QueryBuilder\Tests\Clauses;
 
-use InvalidArgumentException;
 use Ludal\QueryBuilder\Clauses\Delete;
-use PHPUnit\Framework\TestCase;
 use PDO;
-use stdClass;
+use PHPUnit\Framework\TestCase;
 
 final class DeleteTest extends TestCase
 {

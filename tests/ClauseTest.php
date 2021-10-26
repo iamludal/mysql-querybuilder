@@ -2,20 +2,16 @@
 
 namespace Ludal\QueryBuilder\Tests;
 
-use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
-use Ludal\QueryBuilder\Clauses\Clause;
-use Ludal\QueryBuilder\Clauses\Select;
-use Ludal\QueryBuilder\Clauses\Insert;
-use Ludal\QueryBuilder\Clauses\Update;
-use PHPUnit\Framework\TestCase;
-use InvalidArgumentException;
 use BadMethodCallException;
-use stdClass;
-use Error;
-use Exception;
+use Ludal\QueryBuilder\Clauses\Insert;
+use Ludal\QueryBuilder\Clauses\Select;
+use Ludal\QueryBuilder\Clauses\Update;
+use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PDO;
 use PDOException;
 use PDOStatement;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 final class ClauseTest extends TestCase
 {
@@ -51,7 +47,7 @@ final class ClauseTest extends TestCase
 
     public function setUp(): void
     {
-        // clear dbexecute
+        // clear db
         self::$pdo->exec('DELETE FROM users');
 
         // fill db
@@ -68,20 +64,14 @@ final class ClauseTest extends TestCase
         self::$pdo = null;
     }
 
-    public static function getSelect()
+    public static function getSelect(): Select
     {
         return new Select(self::$pdo);
     }
 
-    public static function getInsert()
+    public static function getInsert(): Insert
     {
         return new Insert(self::$pdo);
-    }
-
-    public function testClauseCannotBeInstantiated()
-    {
-        $this->expectException(Error::class);
-        new Clause();
     }
 
     public function testFetchAsClass()
@@ -241,7 +231,7 @@ final class ClauseTest extends TestCase
             ->setParams(compact('name', 'city'))
             ->fetchAll(PDO::FETCH_OBJ);
 
-        $this->assertEquals(2, count($results));
+        $this->assertCount(2, $results);
         $this->assertEquals($name, $results[0]->name);
         $this->assertEquals($city, $results[1]->city);
     }
