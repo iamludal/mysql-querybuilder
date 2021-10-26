@@ -5,16 +5,30 @@ on:
     branches: [develop]
     inputs:
       version:
-        description: The version to release
+        description: Version to release
+        required: true
+        type: string
+      confirm-version:
+        description: Confirm version
         required: true
         type: string
 
 jobs:
-  test:
+  verify-version:
+    name: Verify release version
     runs-on: ubuntu-latest
-
+    env:
+      VERSION: ${{ github.event.inputs.version }}
+      CONFIRM_VERSION: ${{ github.event.inputs.confirm-version }}
     steps:
-      - uses: actions/checkout@v1
+      - run: if [[ $VERSION != $CONFIRM_VERSION ]]; then echo "Version mismatch"; exit 1; fi
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs: verify-version
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Install dependencies
         run: composer install
@@ -22,7 +36,23 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit
 
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Config git
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+
       - name: Rebase master from develop
         run: |
+          git fetch --no-tags
+          git tag ${{ github.event.inputs.version }}
           git checkout master
           git rebase develop
+          git push
+          git push --tags
