@@ -35,7 +35,7 @@ trait OrderBy
      *
      * @return string the generated SQL
      */
-    public function orderByToSQL(): string
+    private function orderByToSQL(): string
     {
         return 'ORDER BY ' . implode(', ', $this->_order);
     }

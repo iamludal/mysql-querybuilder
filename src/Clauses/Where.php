@@ -67,7 +67,7 @@ trait Where
      *
      * @return string the generated SQL
      */
-    protected function whereToSQL(): string
+    private function whereToSQL(): string
     {
         $conditions = implode(') OR (', $this->_conditions);
         return "WHERE ($conditions)";

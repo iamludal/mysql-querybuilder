@@ -52,7 +52,7 @@ trait GroupBy
      *
      * @return string the generated SQL
      */
-    protected function groupByToSQL(): string
+    private function groupByToSQL(): string
     {
         $groupByColumns = implode(', ', $this->_groupByColumns);
         return "GROUP BY $groupByColumns";
