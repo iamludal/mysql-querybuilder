@@ -17,8 +17,9 @@ class Update extends Clause
     /**
      * Set the values to update
      * 
-     * @param mixed ...$values either a string, that is directly the value to set
-     * ("id = 5", ...) or an associative array of the form: [$col => $val, ...]
+     * @param mixed ...$values either a string, that is directly the value to set ("id = 5", ...) or
+     * an associative array of the form: [$col => $val, ...]
+     * @return $this
      */
     public function set(...$values): self
     {
@@ -37,6 +38,7 @@ class Update extends Clause
      * 
      * @param string $column the column name
      * @param mixed $value the value to set
+     * @return $this
      */
     public function setValue(string $column, $value): self
     {

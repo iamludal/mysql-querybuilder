@@ -16,11 +16,12 @@ trait GroupBy
      * or associative array.
      *
      * @param mixed ...$groupByColumns the groupByColumn
+     * @return $this
      * @throws InvalidArgumentException if any groupByColumn is not a string/array
      * @throws InvalidQueryException if the query is invalid or incomplete
      * @throws UnknownType if a param value has an unknown type
      */
-    public function groupBy(...$groupByColumns)
+    public function groupBy(...$groupByColumns): self
     {
         foreach ($groupByColumns as $groupByColumn) {
             if (Utils::isAssociativeArray($groupByColumn)) {
@@ -45,6 +46,8 @@ trait GroupBy
 
     /**
      * Convert the current GROUP BY into an SQL string
+     *
+     * @return string the generated SQL
      */
     protected function groupByToSQL(): string
     {

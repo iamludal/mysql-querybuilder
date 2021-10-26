@@ -16,11 +16,12 @@ trait Where
      * or associative array.
      *
      * @param mixed ...$conditions the condition
+     * @return $this
      * @throws InvalidArgumentException if any condition is not a string/array
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
      */
-    public function where(...$conditions)
+    public function where(...$conditions): self
     {
         foreach ($conditions as $condition) {
             if (Utils::isAssociativeArray($condition)) {
@@ -47,6 +48,7 @@ trait Where
      * Add OR operator for WHERE clause.
      *
      * @param mixed ...$conditions the conditions
+     * @return $this
      * @throws InvalidArgumentException if any condition is not a string
      * @throws InvalidQueryException if the query is invalid
      * @throws UnknownType if a param value has an unknown type
@@ -59,6 +61,8 @@ trait Where
 
     /**
      * Convert the current WHERE into an SQL string
+     *
+     * @return string the generated SQL
      */
     protected function whereToSQL(): string
     {
