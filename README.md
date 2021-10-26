@@ -1,6 +1,6 @@
 # 🔧 MySQL QueryBuilder
 
-![Build Status](https://travis-ci.org/iamludal/PHP-QueryBuilder.svg?branch=master)
+[![PHPUnit](https://github.com/iamludal/mysql-querybuilder/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iamludal/mysql-querybuilder/actions/workflows/run-tests.yml)
 ![Version](https://img.shields.io/github/v/tag/iamludal/PHP-QueryBuilder?label=version)
 ![PHP Version](https://img.shields.io/packagist/php-v/ludal/mysql-querybuilder?color=blueviolet)
 ![License](https://img.shields.io/packagist/l/ludal/mysql-querybuilder?color=orange)
