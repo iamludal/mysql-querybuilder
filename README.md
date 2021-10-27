@@ -64,7 +64,7 @@ Then, you can either:
 - And more: see docs for a full reference
 
 ```php
-$select->toSQL(); // returns "SELECT * FROM users"
+$select->toSQL(); // returns 'SELECT * FROM users'
 
 $select->fetchAll(); // returns the rows fetched from the db
 
@@ -136,7 +136,7 @@ $updated = $qb
 $rowCount = $qb
   ->deleteFrom('users')
   ->where('id > 5')
-  ->orWhere("name = :name")
+  ->orWhere('name = :name')
   ->orderBy('id', 'desc')
   ->limit(10)
   ->setParam(':name', 'John')
