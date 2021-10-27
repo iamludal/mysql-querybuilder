@@ -127,7 +127,7 @@ $insert->errorCode(); // or any other PDOStatement method
 $updated = $qb
   ->update('connections')
   ->set(['exp' => true, 'date' => date('Y-m-d')])
-  ->where(['token' => $token)
+  ->where(['token' => $token])
   ->orderBy('date')
   ->limit(1)
   ->execute();
