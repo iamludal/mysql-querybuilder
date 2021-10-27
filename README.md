@@ -25,7 +25,7 @@ own risk**.
 
 ## 📘 Usage
 
-### Getting started
+### Getting Started
 
 First, initialize a new instance of `QueryBuilder`.
 
@@ -74,7 +74,7 @@ $update->execute(); // executes the UPDATE query
 ```
 
 
-### Supported statements
+### Supported Statements
 
 - [x] `SELECT`
 - [x] `UPDATE`
@@ -82,7 +82,16 @@ $update->execute(); // executes the UPDATE query
 - [x] `INSERT INTO`
 
 
-### Code samples
+### Supported Clauses
+
+- [x] `WHERE`
+- [x] `GROUP BY`
+- [x] `ORDER BY`
+- [x] `LIMIT`
+- [x] `OFFSET`
+
+
+### Code Samples
 
 > ⚠️ For clarity reasons, these examples will use the same instance of
 > `QueryBuilder`. However, it is HIGHLY recommended that you create a new
@@ -118,13 +127,18 @@ $insert->errorCode(); // or any other PDOStatement method
 $updated = $qb
   ->update('connections')
   ->set(['exp' => true, 'date' => date('Y-m-d')])
+  ->where(['token' => $token)
+  ->orderBy('date')
+  ->limit(1)
   ->execute();
 
 // DELETE
 $rowCount = $qb
   ->deleteFrom('users')
-  ->where("id = 5")
+  ->where('id > 5')
   ->orWhere("name = :name")
+  ->orderBy('id', 'desc')
+  ->limit(10)
   ->setParam(':name', 'John')
   ->rowCount(); // will execute, and return the rowCount
 ```
