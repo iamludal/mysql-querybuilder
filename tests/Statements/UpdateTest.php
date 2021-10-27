@@ -128,4 +128,43 @@ final class UpdateTest extends TestCase
             ->where('id = 5')
             ->toSQL();
     }
+
+    public function testOrderBy() {
+        $actualSql = $this->builder
+            ->setTable('users')
+            ->set(['name' => 'John'])
+            ->orderBy('id')
+            ->toSQL();
+
+        $expectedSql = 'UPDATE users SET name = :_name ORDER BY id ASC';
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
+
+    public function testLimit() {
+        $actualSql = $this->builder
+            ->setTable('users')
+            ->set(['name' => 'John'])
+            ->limit(5)
+            ->toSQL();
+
+        $expectedSql = 'UPDATE users SET name = :_name LIMIT 5';
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
+
+    public function testCompleteQuery() {
+        $actualSql = $this->builder
+            ->setTable('users')
+            ->set(['name' => 'John'])
+            ->where('id = 5')
+            ->orderBy('name')
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->toSQL();
+
+        $expectedSql = 'UPDATE users SET name = :_name WHERE (id = 5) ORDER BY name ASC, id DESC LIMIT 10';
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
 }
