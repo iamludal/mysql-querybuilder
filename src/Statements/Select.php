@@ -21,7 +21,7 @@ class Select extends Statement
     /**
      * @var int
      */
-    private $OFFSET;
+    private $_offset;
 
     /**
      * Specify the columns to select.
@@ -108,7 +108,7 @@ class Select extends Statement
      */
     public function offset(int $offset): self
     {
-        $this->OFFSET = $offset;
+        $this->_offset = $offset;
         return $this;
     }
 
@@ -142,8 +142,8 @@ class Select extends Statement
         if ($this->_limit !== null)
             $sql .= ' ' . $this->limitToSQL();
 
-        if ($this->OFFSET)
-            $sql .= " OFFSET $this->OFFSET";
+        if ($this->_offset)
+            $sql .= " OFFSET $this->_offset";
 
         return $sql;
     }
