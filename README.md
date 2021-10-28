@@ -105,7 +105,7 @@ $res = $qb
   ->from('users')
   ->where('id < 4', 'name = :name')
   ->orWhere('age < 12')
-  ->orderBy('id', 'desc')
+  ->orderBy(['id' => 'desc'])
   ->limit(2)
   ->offset(1)
   ->fetchAll();
@@ -124,7 +124,7 @@ $updated = $qb
   ->update('connections')
   ->set(['exp' => true, 'date' => date('Y-m-d')])
   ->where(['token' => $token])
-  ->orderBy('date')
+  ->orderBy(['date'])
   ->limit(1)
   ->execute();
 
@@ -133,7 +133,7 @@ $rowCount = $qb
   ->deleteFrom('users')
   ->where('id > 5')
   ->orWhere('name = :name')
-  ->orderBy('id', 'desc')
+  ->orderBy(['id' => 'desc'])
   ->limit(10)
   ->setParam(':name', 'John')
   ->rowCount(); // will execute, and return the rowCount

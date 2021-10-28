@@ -133,10 +133,10 @@ final class UpdateTest extends TestCase
         $actualSql = $this->builder
             ->setTable('users')
             ->set(['name' => 'John'])
-            ->orderBy('id')
+            ->orderBy(['id'])
             ->toSQL();
 
-        $expectedSql = 'UPDATE users SET name = :_name ORDER BY id ASC';
+        $expectedSql = 'UPDATE users SET name = :_name ORDER BY id';
 
         $this->assertEquals($expectedSql, $actualSql);
     }
@@ -158,12 +158,11 @@ final class UpdateTest extends TestCase
             ->setTable('users')
             ->set(['name' => 'John'])
             ->where('id = 5')
-            ->orderBy('name')
-            ->orderBy('id', 'desc')
+            ->orderBy(['name'])
             ->limit(10)
             ->toSQL();
 
-        $expectedSql = 'UPDATE users SET name = :_name WHERE (id = 5) ORDER BY name ASC, id DESC LIMIT 10';
+        $expectedSql = 'UPDATE users SET name = :_name WHERE (id = 5) ORDER BY name LIMIT 10';
 
         $this->assertEquals($expectedSql, $actualSql);
     }

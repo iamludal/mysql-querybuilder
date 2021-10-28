@@ -116,10 +116,10 @@ final class DeleteTest extends TestCase
         $actualSql = $this->builder
             ->setTable('users')
             ->where('id < :id')
-            ->orderBy('id')
+            ->orderBy(['id'])
             ->toSQL();
 
-        $expectedSql = "DELETE FROM users WHERE (id < :id) ORDER BY id ASC";
+        $expectedSql = "DELETE FROM users WHERE (id < :id) ORDER BY id";
 
         $this->assertEquals($expectedSql, $actualSql);
     }
@@ -139,12 +139,11 @@ final class DeleteTest extends TestCase
         $actualSql = $this->builder
             ->setTable('users')
             ->where('id = :id')
-            ->orderBy('id', 'desc')
-            ->orderBy('name')
+            ->orderBy(['id' => 'desc', 'name'])
             ->limit(10)
             ->toSQL();
 
-        $expectedSql = "DELETE FROM users WHERE (id = :id) ORDER BY id DESC, name ASC LIMIT 10";
+        $expectedSql = "DELETE FROM users WHERE (id = :id) ORDER BY id DESC, name LIMIT 10";
 
         $this->assertEquals($expectedSql, $actualSql);
     }

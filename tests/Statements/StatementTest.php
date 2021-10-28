@@ -227,7 +227,7 @@ final class StatementTest extends TestCase
             ->from('users')
             ->where('name = :name')
             ->orWhere('city = :city')
-            ->orderBy('id')
+            ->orderBy(['id'])
             ->setParams(compact('name', 'city'))
             ->fetchAll(PDO::FETCH_OBJ);
 
