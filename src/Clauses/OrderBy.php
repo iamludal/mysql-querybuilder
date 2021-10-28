@@ -20,6 +20,8 @@ trait OrderBy
      */
     public function orderBy(array $columns): self
     {
+        $this->_order = [];
+
         foreach ($columns as $column => $direction) {
             if (is_int($column)) {
                 $column = $direction;

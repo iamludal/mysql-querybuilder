@@ -34,4 +34,13 @@ final class OrderByTest extends TestCase
 
         $this->assertEquals($expectedSql, $actualSql);
     }
+
+    public function testOrderByIsClearedOnSecondCall()
+    {
+        $actualSql = $this->orderByMock->orderBy(['id'])->orderBy(['name'])->toSQL();
+
+        $expectedSql = 'ORDER BY name';
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
 }
