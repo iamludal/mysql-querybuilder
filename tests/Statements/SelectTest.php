@@ -216,20 +216,6 @@ final class SelectTest extends TestCase
         $this->assertEquals($expected, $sql);
     }
 
-    public function testOrderBy()
-    {
-        $sql = $this->builder
-            ->setColumns()
-            ->from('cars')
-            ->orderBy('brand', 'desc')
-            ->orderBy('year')
-            ->toSQL();
-
-        $expected = 'SELECT * FROM cars ORDER BY brand DESC, year ASC';
-
-        $this->assertEquals($expected, $sql);
-    }
-
     public function testLimit()
     {
         $sql = $this->builder
@@ -284,15 +270,14 @@ final class SelectTest extends TestCase
             ->where('id < :id', 'age < 20')
             ->orWhere('country = "FR"')
             ->orWhere('id < 30')
-            ->orderBy('age', 'desc')
-            ->orderBy('name')
+            ->orderBy(['age' => 'desc'])
             ->limit(10)
             ->offset(5)
             ->toSQL();
 
         $expected = 'SELECT name AS n, age FROM users ';
         $expected .= 'WHERE (id < :id AND age < 20) OR (country = "FR") OR (id < 30) ';
-        $expected .= 'ORDER BY age DESC, name ASC LIMIT 10 OFFSET 5';
+        $expected .= 'ORDER BY age DESC LIMIT 10 OFFSET 5';
 
         $this->assertEquals($expected, $sql);
     }
