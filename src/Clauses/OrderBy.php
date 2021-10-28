@@ -14,19 +14,29 @@ trait OrderBy
     /**
      * Add ORDER BY clause to the query
      *
-     * @param string $column the column to select
-     * @param string|null $direction (optional) the direction (ASC or DESC)
+     * @param array $columns the columns to order by (as an associative array: column => direction)
      * @return $this
      * @throws InvalidArgumentException if the direction is invalid
      */
-    public function orderBy(string $column, string $direction = 'asc'): self
+    public function orderBy(array $columns): self
     {
-        $direction = strtoupper($direction);
+        foreach ($columns as $column => $direction) {
+            if (is_int($column)) {
+                $column = $direction;
+                $direction = null;
+            } else {
+                $direction = strtoupper($direction);
+            }
 
-        if (!in_array($direction, ['ASC', 'DESC']))
-            throw new InvalidArgumentException('Direction should be either ASC or DESC');
+            if (!is_string($column)) {
+                throw new InvalidArgumentException('The column must be a string');
+            } elseif (is_string($direction) && !in_array($direction, ['ASC', 'DESC'])) {
+                throw new InvalidArgumentException('Direction should be either ASC or DESC');
+            }
 
-        $this->_order[] = "$column $direction";
+            $this->_order[] = is_null($direction) ? $column : "$column $direction";
+        }
+
         return $this;
     }
 
