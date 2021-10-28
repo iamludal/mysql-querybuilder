@@ -111,4 +111,41 @@ final class DeleteTest extends TestCase
 
         $this->assertEquals(5, $count);
     }
+
+    public function testDeleteWithOrderBy() {
+        $actualSql = $this->builder
+            ->setTable('users')
+            ->where('id < :id')
+            ->orderBy('id')
+            ->toSQL();
+
+        $expectedSql = "DELETE FROM users WHERE (id < :id) ORDER BY id ASC";
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
+
+    public function testDeleteWithLimit() {
+        $actualSql = $this->builder
+            ->setTable('users')
+            ->limit(5)
+            ->toSQL();
+
+        $expectedSql = "DELETE FROM users LIMIT 5";
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
+
+    public function testDeleteWithOrderByAndLimit() {
+        $actualSql = $this->builder
+            ->setTable('users')
+            ->where('id = :id')
+            ->orderBy('id', 'desc')
+            ->orderBy('name')
+            ->limit(10)
+            ->toSQL();
+
+        $expectedSql = "DELETE FROM users WHERE (id = :id) ORDER BY id DESC, name ASC LIMIT 10";
+
+        $this->assertEquals($expectedSql, $actualSql);
+    }
 }

@@ -2,12 +2,14 @@
 
 namespace Ludal\QueryBuilder\Statements;
 
+use Ludal\QueryBuilder\Clauses\Limit;
+use Ludal\QueryBuilder\Clauses\OrderBy;
 use Ludal\QueryBuilder\Clauses\Where;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 
 class Update extends Statement
 {
-    use Where;
+    use Where, OrderBy, Limit;
 
     /**
      * @var array the params, in the form : "id = 4", "age = 20"...
@@ -16,7 +18,7 @@ class Update extends Statement
 
     /**
      * Set the values to update
-     * 
+     *
      * @param mixed ...$values either a string, that is directly the value to set ("id = 5", ...) or
      * an associative array of the form: [$col => $val, ...]
      * @return $this
@@ -35,7 +37,7 @@ class Update extends Statement
 
     /**
      * Set a value for the column to be updated
-     * 
+     *
      * @param string $column the column name
      * @param mixed $value the value to set
      * @return $this
@@ -67,8 +69,14 @@ class Update extends Statement
 
         $sql .= implode(', ', $this->updateParams);
 
-        if ($this->conditions)
+        if ($this->_conditions)
             $sql .= ' ' . $this->whereToSQL();
+
+        if ($this->_order)
+            $sql .= ' ' . $this->orderByToSQL();
+
+        if ($this->_limit !== null)
+            $sql .= ' ' . $this->limitToSQL();
 
         return $sql;
     }

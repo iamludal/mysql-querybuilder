@@ -9,7 +9,10 @@ use Ludal\QueryBuilder\Utils;
 
 trait Where
 {
-    protected $conditions;
+    /**
+     * @var string[] the AND conditions
+     */
+    protected $_conditions = [];
 
     /**
      * Add a select condition (WHERE clause). The conditions can be as strings
@@ -39,7 +42,7 @@ trait Where
         }
 
         if ($conditions)
-            $this->conditions[] = implode(' AND ', $conditions);
+            $this->_conditions[] = implode(' AND ', $conditions);
 
         return $this;
     }
@@ -64,9 +67,9 @@ trait Where
      *
      * @return string the generated SQL
      */
-    protected function whereToSQL(): string
+    private function whereToSQL(): string
     {
-        $conditions = implode(') OR (', $this->conditions);
+        $conditions = implode(') OR (', $this->_conditions);
         return "WHERE ($conditions)";
     }
 }

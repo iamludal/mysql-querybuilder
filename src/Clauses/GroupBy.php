@@ -9,7 +9,10 @@ use Ludal\QueryBuilder\Utils;
 
 trait GroupBy
 {
-    protected $groupByColumns;
+    /**
+     * @var string[] the columns to group by
+     */
+    protected $_groupByColumns = [];
 
     /**
      * Add a select groupByColumn (GROUP BY clause). The groupByColumns can be as strings
@@ -39,7 +42,7 @@ trait GroupBy
         }
 
         if ($groupByColumns)
-            $this->groupByColumns[] = implode(', ', $groupByColumns);
+            $this->_groupByColumns[] = implode(', ', $groupByColumns);
 
         return $this;
     }
@@ -49,9 +52,9 @@ trait GroupBy
      *
      * @return string the generated SQL
      */
-    protected function groupByToSQL(): string
+    private function groupByToSQL(): string
     {
-        $groupByColumns = implode(', ', $this->groupByColumns);
+        $groupByColumns = implode(', ', $this->_groupByColumns);
         return "GROUP BY $groupByColumns";
     }
 }

@@ -243,13 +243,7 @@ final class SelectTest extends TestCase
 
     public function testLimitAndOffset()
     {
-        $sql1 = (new Select())
-            ->setColumns()
-            ->from('cars')
-            ->limit(5, 10)
-            ->toSQL();
-
-        $sql2 = (new Select())
+        $sql = (new Select())
             ->setColumns()
             ->from('cars')
             ->limit(10)
@@ -258,8 +252,7 @@ final class SelectTest extends TestCase
 
         $expected = 'SELECT * FROM cars LIMIT 10 OFFSET 5';
 
-        $this->assertEquals($expected, $sql1);
-        $this->assertEquals($expected, $sql2);
+        $this->assertEquals($expected, $sql);
     }
 
     public function testOffset()
