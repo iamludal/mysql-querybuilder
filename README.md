@@ -105,7 +105,7 @@ $res = $qb
   ->from('users')
   ->where('id < 4', 'name = :name')
   ->orWhere('age < 12')
-  ->orderBy(['id' => 'desc'])
+  ->orderBy(['id' => Order::DESC])
   ->limit(2)
   ->offset(1)
   ->fetchAll();
@@ -133,7 +133,7 @@ $rowCount = $qb
   ->deleteFrom('users')
   ->where('id > 5')
   ->orWhere('name = :name')
-  ->orderBy(['id' => 'desc'])
+  ->orderBy(['id' => Order::ASC])
   ->limit(10)
   ->setParam(':name', 'John')
   ->rowCount(); // will execute, and return the rowCount
