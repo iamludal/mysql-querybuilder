@@ -110,6 +110,11 @@ $res = $qb
   ->offset(1)
   ->fetchAll();
 
+$res = $qb
+  ->select('city', 'COUNT(id)')
+  ->from('users')
+  ->groupBy(['city' => Order::ASC]);
+
 // INSERT
 $insert = $qb
   ->insertInto('articles')
