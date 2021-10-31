@@ -2,6 +2,7 @@
 
 namespace Ludal\QueryBuilder\Tests\Statements;
 
+use Ludal\QueryBuilder\Enums\Order;
 use Ludal\QueryBuilder\Statements\Delete;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -139,7 +140,7 @@ final class DeleteTest extends TestCase
         $actualSql = $this->builder
             ->setTable('users')
             ->where('id = :id')
-            ->orderBy(['id' => 'desc', 'name'])
+            ->orderBy(['id' => Order::DESC, 'name'])
             ->limit(10)
             ->toSQL();
 

@@ -2,6 +2,7 @@
 
 namespace Ludal\QueryBuilder\Tests\Statements;
 
+use Ludal\QueryBuilder\Enums\Order;
 use Ludal\QueryBuilder\Statements\Select;
 use Ludal\QueryBuilder\Exceptions\InvalidQueryException;
 use PDO;
@@ -208,7 +209,7 @@ final class SelectTest extends TestCase
         $sql = $this->builder
             ->setColumns('COUNT(*)')
             ->from('users')
-            ->groupBy(['group_id' => 'ASC', 'second_group_id' => 'DESC'])
+            ->groupBy(['group_id' => Order::ASC, 'second_group_id' => Order::DESC])
             ->toSQL();
 
         $expected = 'SELECT COUNT(*) FROM users GROUP BY group_id ASC, second_group_id DESC';
@@ -270,7 +271,7 @@ final class SelectTest extends TestCase
             ->where('id < :id', 'age < 20')
             ->orWhere('country = "FR"')
             ->orWhere('id < 30')
-            ->orderBy(['age' => 'desc'])
+            ->orderBy(['age' => Order::DESC])
             ->limit(10)
             ->offset(5)
             ->toSQL();
