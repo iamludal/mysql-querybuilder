@@ -120,7 +120,7 @@ class Select extends Statement
 
     public function toSQL(): string
     {
-        $this->validate();
+
 
         $columns = implode(', ', $this->columns);
         $sql = "SELECT $columns FROM $this->table";
