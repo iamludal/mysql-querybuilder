@@ -47,12 +47,7 @@ abstract class Statement
         $this->pdo = $pdo;
     }
 
-    /**
-     * Validate the query
-     * 
-     * @throws InvalidQueryException if the query is invalid/incomplete
-     */
-    abstract protected function validate(): void;
+
 
     /**
      * Convert the query into an SQL string

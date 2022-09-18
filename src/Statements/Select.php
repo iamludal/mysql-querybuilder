@@ -37,18 +37,21 @@ class Select extends Statement
      */
     public function setColumns(...$columns): self
     {
+        // declare empty array for columns
         $this->columns = [];
 
         foreach ($columns as $column) {
             if (is_string($column))
                 $this->addColumn($column);
+
             elseif (is_array($column)) {
                 $this->addColumnsFromArray($column);
-            } else
+            }
+            else
                 throw new InvalidArgumentException('Argument should be a string or array');
         }
 
-        if (!$columns)
+        if (empty($columns))
             $this->addColumn('*');
 
         return $this;
@@ -66,6 +69,7 @@ class Select extends Statement
         if ($alias)
             $columnName = "$columnName AS $alias";
 
+        // add column name to columns table
         $this->columns[] = $columnName;
     }
 
@@ -92,7 +96,7 @@ class Select extends Statement
      * @param string|null $alias (optional) the alias to give to the table
      * @return $this
      */
-    public function from(string $table, string $alias = null): self
+    public function from(string $table , string $alias = null): self
     {
         if ($alias)
             $table = "$table AS $alias";
@@ -112,20 +116,11 @@ class Select extends Statement
         return $this;
     }
 
-    protected function validate(): void
-    {
-        $conditions = [
-            $this->table != null,
-            count($this->columns) > 0
-        ];
 
-        if (in_array(false, $conditions))
-            throw new InvalidQueryException();
-    }
 
     public function toSQL(): string
     {
-        $this->validate();
+
 
         $columns = implode(', ', $this->columns);
         $sql = "SELECT $columns FROM $this->table";
